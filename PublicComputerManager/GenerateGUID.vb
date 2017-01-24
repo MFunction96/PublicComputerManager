@@ -1,4 +1,9 @@
-﻿Public Class GenerateGUID
+﻿'**********************************************************
+'名称：GUID生成类
+'功能：用于生成各类程序中使用的GUID
+'修改时间：2017-01-24
+'**********************************************************
+Public Class GenerateGUID
 
     Public Shared Function Generate(
                            ByVal isReg As Boolean) _

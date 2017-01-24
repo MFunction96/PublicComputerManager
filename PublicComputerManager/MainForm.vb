@@ -1,4 +1,9 @@
-﻿Public Class MainForm
+﻿'**********************************************************
+'名称：主窗体
+'功能：本程序的核心窗口，功能的控制面板
+'修改时间：2017-01-24
+'**********************************************************
+Public Class MainForm
 
     Private limproc As Status
     Private limitdisk As Status

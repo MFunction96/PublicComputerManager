@@ -1,4 +1,9 @@
-﻿Public Module PInvoke
+﻿'**********************************************************
+'名称：P/Invoke模块
+'功能：实现非托管代码的P/Invoke方法
+'修改时间：2017-01-24
+'**********************************************************
+Public Module PInvoke
 
     Public Enum ERROR_CODE
         ERROR_SUCCESS = &H0

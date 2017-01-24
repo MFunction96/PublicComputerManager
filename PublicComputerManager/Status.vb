@@ -1,4 +1,9 @@
-﻿Public Structure REGVALUESET
+﻿'**********************************************************
+'名称：状态类
+'功能：用于查询当前计算机的功能相关状态
+'修改时间：2017-01-24
+'**********************************************************
+Public Structure REGVALUESET
     Dim isNull As Boolean
     Dim lpType As REG_TYPE
     Dim lpvalue As Object
