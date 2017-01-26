@@ -30,12 +30,12 @@ Public Enum KEY_ACCESS_TYPE
     KEY_WOW64_32KEY = &H200
 End Enum
 
-Public Enum OPERATE_OPTION
-    REG_OPTION_NON_VOLATILE = &H0
-    REG_CREATED_NEW_KEY = &H1
-End Enum
-
 Public Class RegAPI
+
+    Private Enum OPERATE_OPTION
+        REG_OPTION_NON_VOLATILE = &H0
+        REG_CREATED_NEW_KEY = &H1
+    End Enum
 
     Public Structure VALUE
         Dim value As Object

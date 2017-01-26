@@ -4,23 +4,34 @@
 '修改时间：2017-01-26
 '**********************************************************
 Public Structure REGVALUESET
-    Dim isNull As Boolean
-    Dim lpType As REG_TYPE
+    Dim isnull As Boolean
+    Dim lptype As REG_TYPE
     Dim lpvalue As Object
-    Dim is64Reg As Boolean
+    Dim is64reg As Boolean
 
     Sub New(
-        ByVal isNullP As Boolean,
-        ByVal lpTypeP As REG_TYPE,
-        ByVal lpvalueP As Object,
-        ByVal is64RegP As Boolean)
+        ByVal isnull As Boolean,
+        ByVal lptype As REG_TYPE,
+        ByVal lpvalue As Object,
+        ByVal is64reg As Boolean)
 
-        isNull = isNullP
-        lpType = lpTypeP
-        lpvalue = lpvalueP
-        is64Reg = is64RegP
+        Me.isnull = isnull
+        Me.lptype = lptype
+        Me.lpvalue = lpvalue
+        Me.is64reg = is64reg
 
     End Sub
+
+    Sub New(
+        ByRef regvalueset As REGVALUESET)
+
+        isnull = regvalueset.isnull
+        lptype = regvalueset.lptype
+        lpvalue = regvalueset.lpvalue
+        is64reg = regvalueset.is64reg
+
+    End Sub
+
 End Structure
 
 Public Class Status
@@ -30,9 +41,9 @@ Public Class Status
 
     Private state As Boolean
     Private regnum As Integer
-    Private hKey As REG_ROOT_KEY
-    Private lpSubKey As String
-    Private lpValueName As String
+    Private hkey As REG_ROOT_KEY
+    Private lpsubkey As String
+    Private lpvaluename As String
 
     Private label As Label
     Private button As Button
@@ -41,28 +52,28 @@ Public Class Status
     Private offreg() As REGVALUESET
 
     Public Sub New(
-               ByVal lableP As Label,
-               ByVal buttonP As Button,
-               ByVal regNumP As Integer,
-               ByVal hKeyP As REG_ROOT_KEY,
-               ByVal lpSubkeyP As String,
-               ByVal lpValueNameP As String,
-               ByVal onRegP() As REGVALUESET,
-               ByVal offRegP() As REGVALUESET)
+               ByVal label As Label,
+               ByVal button As Button,
+               ByVal regNum As Integer,
+               ByVal hKey As REG_ROOT_KEY,
+               ByVal lpSubkey As String,
+               ByVal lpValueName As String,
+               ByRef onReg() As REGVALUESET,
+               ByRef offReg() As REGVALUESET)
 
         Dim i As Integer
 
         state = False
-        label = lableP
-        button = buttonP
-        regnum = regNumP
-        hKey = hKeyP
-        lpSubKey = lpSubkeyP
-        lpValueName = lpValueNameP
-        ReDim onreg(regnum), offreg(regnum)
-        For i = 0 To regnum - 1 Step 1
-            onreg(i) = onRegP(i)
-            offreg(i) = offRegP(i)
+        Me.label = label
+        Me.button = button
+        Me.regnum = regNum
+        Me.hkey = hKey
+        Me.lpsubkey = lpSubkey
+        Me.lpvaluename = lpValueName
+        ReDim Me.onreg(regNum), Me.offreg(regNum)
+        For i = 0 To regNum - 1 Step 1
+            Me.onreg(i) = onReg(i)
+            Me.offreg(i) = offReg(i)
         Next
 
     End Sub
@@ -77,8 +88,8 @@ Public Class Status
         Dim strresult As String
 
         For i = 0 To regnum - 1 Step 1
-            reg.RegGetValue(hKey, lpSubKey, lpValueName, onreg(i).is64Reg)
-            If reg.GetError() <> ERROR_CODE.ERROR_SUCCESS And Not (reg.GetError() = ERROR_CODE.ERROR_FILE_NOT_FOUND And onreg(i).isNull) Then
+            reg.RegGetValue(hkey, lpsubkey, lpvaluename, onreg(i).is64reg)
+            If reg.GetError() <> ERROR_CODE.ERROR_SUCCESS And Not (reg.GetError() = ERROR_CODE.ERROR_FILE_NOT_FOUND And onreg(i).isnull) Then
                 Return reg.GetError()
             End If
             regvalue = reg.GetValue()
@@ -95,7 +106,7 @@ Public Class Status
                     Return OFF_STATE
                 End If
             Else
-                If regvalue.valuetype <> vbNull Or onreg(i).isNull <> True Then
+                If regvalue.valuetype <> vbNull Or onreg(i).isnull <> True Then
                     state = False
                     Return OFF_STATE
                 End If
