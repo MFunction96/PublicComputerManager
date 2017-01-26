@@ -62,7 +62,7 @@ Public Module PInvoke
                                ByVal hKey As IntPtr,
                                ByVal lpValueName As String,
                                ByVal lpReserved As Integer,
-                               ByVal lpType As REG_TYPE,
+                               ByVal lpType As RegAPI.REG_TYPE,
                                ByRef lpData As UInteger,
                                ByVal lpcbData As Integer) _
                                As ERROR_CODE
@@ -73,7 +73,7 @@ Public Module PInvoke
                                ByVal hKey As IntPtr,
                                ByVal lpValueName As String,
                                ByVal lpReserved As Integer,
-                               ByVal lpType As REG_TYPE,
+                               ByVal lpType As RegAPI.REG_TYPE,
                                ByVal lpData As String,
                                ByVal lpcbData As Integer) _
                                As ERROR_CODE
@@ -84,7 +84,7 @@ Public Module PInvoke
                                ByVal hKey As IntPtr,
                                ByVal lpValueName As String,
                                ByVal lpReserved As IntPtr,
-                               ByRef lpType As REG_TYPE,
+                               ByRef lpType As RegAPI.REG_TYPE,
                                ByVal lpData As String,
                                ByRef lpcbData As Integer) _
                                As ERROR_CODE
@@ -95,7 +95,7 @@ Public Module PInvoke
                                ByVal hKey As IntPtr,
                                ByVal lpValueName As String,
                                ByVal lpReserved As IntPtr,
-                               ByRef lpType As REG_TYPE,
+                               ByRef lpType As RegAPI.REG_TYPE,
                                ByRef lpData As Integer,
                                ByRef lpcbData As Integer) _
                                As ERROR_CODE

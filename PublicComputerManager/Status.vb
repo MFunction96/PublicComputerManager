@@ -5,13 +5,13 @@
 '**********************************************************
 Public Structure REGVALUESET
     Dim isnull As Boolean
-    Dim lptype As REG_TYPE
+    Dim lptype As RegAPI.REG_TYPE
     Dim lpvalue As Object
     Dim is64reg As Boolean
 
     Sub New(
         ByVal isnull As Boolean,
-        ByVal lptype As REG_TYPE,
+        ByVal lptype As RegAPI.REG_TYPE,
         ByVal lpvalue As Object,
         ByVal is64reg As Boolean)
 
@@ -41,7 +41,7 @@ Public Class Status
 
     Private state As Boolean
     Private regnum As Integer
-    Private hkey As REG_ROOT_KEY
+    Private hkey As RegAPI.REG_ROOT_KEY
     Private lpsubkey As String
     Private lpvaluename As String
 
@@ -55,7 +55,7 @@ Public Class Status
                ByVal label As Label,
                ByVal button As Button,
                ByVal regNum As Integer,
-               ByVal hKey As REG_ROOT_KEY,
+               ByVal hKey As RegAPI.REG_ROOT_KEY,
                ByVal lpSubkey As String,
                ByVal lpValueName As String,
                ByRef onReg() As REGVALUESET,
