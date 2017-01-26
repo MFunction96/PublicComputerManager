@@ -40,6 +40,14 @@ Public Class RegAPI
     Public Structure VALUE
         Dim value As Object
         Dim valuetype As VariantType
+        Sub New(
+            ByVal value As Object,
+            ByVal valuetype As VariantType)
+
+            Me.value = value
+            Me.valuetype = valuetype
+
+        End Sub
     End Structure
 
     Private Const REG_OPENED_EXISTING_KEY As Integer = &H2
@@ -82,8 +90,7 @@ Public Class RegAPI
 
         If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
             returnvalue = reggetvaluetemp
-            regvalue.value = vbNull
-            regvalue.valuetype = vbNull
+            regvalue = New VALUE(vbNull, vbNull)
             Return
         End If
 
@@ -91,8 +98,7 @@ Public Class RegAPI
         If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
             returnvalue = reggetvaluetemp
             reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
-            regvalue.value = vbNull
-            regvalue.valuetype = vbNull
+            regvalue = New VALUE(vbNull, vbNull)
             Return
         End If
 
@@ -102,35 +108,30 @@ Public Class RegAPI
             If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                 returnvalue = reggetvaluetemp
                 reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
-                regvalue.value = vbNull
-                regvalue.valuetype = vbNull
+                regvalue = New VALUE(vbNull, vbNull)
                 Return
             End If
             If lptype = REG_TYPE.REG_SZ Then
-                regvalue.value = Left(lpdatastr, InStr(lpdatastr, Chr(0)) - 1)
+                regvalue = New VALUE(Left(lpdatastr, InStr(lpdatastr, Chr(0)) - 1), vbString)
             Else
-                regvalue.value = lpdatastr
+                regvalue = New VALUE(lpdatastr, vbString)
             End If
-            regvalue.valuetype = vbString
         Else
             reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, lpValueName, IntPtr.op_Explicit(0), lptype, lpdataint, lpcbdata)
             If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                 returnvalue = reggetvaluetemp
                 reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
-                regvalue.value = vbNull
-                regvalue.valuetype = vbNull
+                regvalue = New VALUE(vbNull, vbNull)
                 Return
             End If
-            regvalue.value = lpdataint
-            regvalue.valuetype = vbInteger
+            regvalue = New VALUE(lpdataint, vbInteger)
         End If
 
         returnvalue = reggetvaluetemp
 
         If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
             reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
-            regvalue.value = vbNull
-            regvalue.valuetype = vbNull
+            regvalue = New VALUE(vbNull, vbNull)
             Return
         End If
 

@@ -25,6 +25,9 @@ End Structure
 
 Public Class Status
 
+    Private Const ON_STATE As Integer = -1
+    Private Const OFF_STATE As Integer = 0
+
     Private state As Boolean
     Private regnum As Integer
     Private hKey As REG_ROOT_KEY
@@ -75,32 +78,31 @@ Public Class Status
 
         For i = 0 To regnum - 1 Step 1
             reg.RegGetValue(hKey, lpSubKey, lpValueName, onreg(i).is64Reg)
-            regvalue = reg.GetValue()
             If reg.GetError() <> ERROR_CODE.ERROR_SUCCESS And Not (reg.GetError() = ERROR_CODE.ERROR_FILE_NOT_FOUND And onreg(i).isNull) Then
                 Return reg.GetError()
             End If
-
+            regvalue = reg.GetValue()
             If regvalue.valuetype = vbString Then
                 strresult = CStr(regvalue.value)
                 If strresult <> CStr(onreg(i).lpvalue) Then
                     state = False
-                    Return 0
+                    Return OFF_STATE
                 End If
             ElseIf regvalue.valuetype = vbInteger Then
                 intresult = CInt(regvalue.value)
                 If intresult <> CInt(onreg(i).lpvalue) Then
                     state = False
-                    Return 0
+                    Return OFF_STATE
                 End If
             Else
                 If regvalue.valuetype <> vbNull Or onreg(i).isNull <> True Then
                     state = False
-                    Return 0
+                    Return OFF_STATE
                 End If
             End If
         Next
 
-        Return -1
+        Return ON_STATE
 
     End Function
 
