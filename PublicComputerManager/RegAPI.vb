@@ -9,6 +9,11 @@ Public Class RegAPI
         REG_OPTION_NON_VOLATILE = &H0
         REG_CREATED_NEW_KEY = &H1
     End Enum
+    Private Enum KEY_ACCESS_TYPE
+        KEY_ALL_ACCESS = &H3F
+        KEY_WOW64_64KEY = &H100
+        KEY_WOW64_32KEY = &H200
+    End Enum
     Public Enum REG_TYPE
         REG_NONE = 0
         REG_SZ = 1
@@ -27,11 +32,6 @@ Public Class RegAPI
         HKEY_PERFORMANCE_DATA = &H80000004
         HKEY_CURRENT_CONFIG = &H80000005
         HKEY_DYN_DATA = &H80000006
-    End Enum
-    Public Enum KEY_ACCESS_TYPE
-        KEY_ALL_ACCESS = &H3F
-        KEY_WOW64_64KEY = &H100
-        KEY_WOW64_32KEY = &H200
     End Enum
     Public Structure VALUE
         Dim value As Object
