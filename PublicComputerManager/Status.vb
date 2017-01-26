@@ -131,7 +131,7 @@ Public Class Status
                 r = onreg(i)
             End If
             If r.isNull Then
-                reg.RegDelete(hKey, lpSubKey, r.is64Reg, lpValueName)
+                reg.RegDel(hkey, lpsubkey, r.is64reg, lpvaluename)
                 e = reg.GetError()
                 If reg.GetError() = ERROR_CODE.ERROR_FILE_NOT_FOUND Then e = ERROR_CODE.ERROR_SUCCESS
             Else

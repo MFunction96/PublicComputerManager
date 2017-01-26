@@ -54,11 +54,11 @@ Public Class RegAPI
     Public Function GetError() As ERROR_CODE
         Return returnvalue
     End Function
-    Public Sub RegGetValue _
-               (ByVal hKey As REG_ROOT_KEY,
+    Public Sub RegGetValue(
+               ByRef hKey As REG_ROOT_KEY,
                ByVal lpSubKey As String,
                ByVal lpValueName As String,
-               ByVal is64Reg As Boolean)
+               ByRef is64Reg As Boolean)
 
         Dim reggetvaluetemp As ERROR_CODE
         Dim phkresult As IntPtr
@@ -131,13 +131,13 @@ Public Class RegAPI
         Return
 
     End Sub
-    Public Sub RegSetValue _
-               (ByVal hKey As REG_ROOT_KEY,
+    Public Sub RegSetValue(
+               ByRef hKey As REG_ROOT_KEY,
                ByVal lpSubKey As String,
                ByVal lpValueName As String,
                ByVal setValue As Object,
-               ByVal valueType As REG_TYPE,
-               ByVal is64Reg As Boolean)
+               ByRef valueType As REG_TYPE,
+               ByRef is64Reg As Boolean)
 
         Dim keyexist As Integer
         Dim samdesired As KEY_ACCESS_TYPE
@@ -173,10 +173,10 @@ Public Class RegAPI
         regsetvaluetemp = NativeMethods.RegCloseKey(phkresult)
 
     End Sub
-    Public Sub RegDelete _
-               (ByVal hKey As REG_ROOT_KEY,
+    Public Sub RegDel(
+               ByRef hKey As REG_ROOT_KEY,
                ByVal lpSubKey As String,
-               ByVal is64Reg As Boolean,
+               ByRef is64Reg As Boolean,
                Optional ByVal lpValueName As String = vbNullString)
 
         Dim regdeletetemp As ERROR_CODE

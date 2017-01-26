@@ -21,34 +21,34 @@ Public Class MainForm
         Dim n As Integer
         n = 1
         ReDim onreg(n), offreg(n)
-        onreg(0) = New REGVALUESET(False, REG_TYPE.REG_DWORD, &H40000, True)
-        offreg(0) = New REGVALUESET(True, REG_TYPE.REG_DWORD, &H0, True)
-        limproc = New Status(LimProcS, LimProcB, n, REG_ROOT_KEY.HKEY_LOCAL_MACHINE, "Software\Policies\Microsoft\Windows\safer\codeidentifiers", "DefaultLevel", onreg, offreg)
+        onreg(0) = New REGVALUESET(False, RegAPI.REG_TYPE.REG_DWORD, &H40000, True)
+        offreg(0) = New REGVALUESET(True, RegAPI.REG_TYPE.REG_DWORD, &H0, True)
+        limproc = New Status(LimProcS, LimProcB, n, RegAPI.REG_ROOT_KEY.HKEY_LOCAL_MACHINE, "Software\Policies\Microsoft\Windows\safer\codeidentifiers", "DefaultLevel", onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
-        onreg(0) = New REGVALUESET(False, REG_TYPE.REG_DWORD, &H4, True)
-        offreg(0) = New REGVALUESET(True, REG_TYPE.REG_DWORD, &H0, True)
-        limitdisk = New Status(LimitDiskS, LimitDiskB, n, REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoDrives", onreg, offreg)
+        onreg(0) = New REGVALUESET(False, RegAPI.REG_TYPE.REG_DWORD, &H4, True)
+        offreg(0) = New REGVALUESET(True, RegAPI.REG_TYPE.REG_DWORD, &H0, True)
+        limitdisk = New Status(LimitDiskS, LimitDiskB, n, RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoDrives", onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
-        onreg(0) = New REGVALUESET(False, REG_TYPE.REG_DWORD, &H2, True)
-        offreg(0) = New REGVALUESET(True, REG_TYPE.REG_DWORD, &H0, True)
-        registry = New Status(RegistryS, RegistryB, n, REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableRegistryTools", onreg, offreg)
+        onreg(0) = New REGVALUESET(False, RegAPI.REG_TYPE.REG_DWORD, &H2, True)
+        offreg(0) = New REGVALUESET(True, RegAPI.REG_TYPE.REG_DWORD, &H0, True)
+        registry = New Status(RegistryS, RegistryB, n, RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableRegistryTools", onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
-        onreg(0) = New REGVALUESET(False, REG_TYPE.REG_DWORD, &H1, True)
-        offreg(0) = New REGVALUESET(True, REG_TYPE.REG_DWORD, &H0, True)
-        cmd = New Status(CmdS, CmdB, n, REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Policies\Microsoft\Windows\System", "DisableCMD", onreg, offreg)
+        onreg(0) = New REGVALUESET(False, RegAPI.REG_TYPE.REG_DWORD, &H1, True)
+        offreg(0) = New REGVALUESET(True, RegAPI.REG_TYPE.REG_DWORD, &H0, True)
+        cmd = New Status(CmdS, CmdB, n, RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Policies\Microsoft\Windows\System", "DisableCMD", onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
-        onreg(0) = New REGVALUESET(False, REG_TYPE.REG_DWORD, &H1, True)
-        offreg(0) = New REGVALUESET(True, REG_TYPE.REG_DWORD, &H0, True)
-        taskmgr = New Status(TaskmgrS, TaskmgrB, n, REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableTaskMgr", onreg, offreg)
+        onreg(0) = New REGVALUESET(False, RegAPI.REG_TYPE.REG_DWORD, &H1, True)
+        offreg(0) = New REGVALUESET(True, RegAPI.REG_TYPE.REG_DWORD, &H0, True)
+        taskmgr = New Status(TaskmgrS, TaskmgrB, n, RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableTaskMgr", onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
-        onreg(0) = New REGVALUESET(False, REG_TYPE.REG_DWORD, &H1, True)
-        offreg(0) = New REGVALUESET(True, REG_TYPE.REG_DWORD, &H0, True)
-        launcher = New Status(LauncherS, LauncherB, n, REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoRun", onreg, offreg)
+        onreg(0) = New REGVALUESET(False, RegAPI.REG_TYPE.REG_DWORD, &H1, True)
+        offreg(0) = New REGVALUESET(True, RegAPI.REG_TYPE.REG_DWORD, &H0, True)
+        launcher = New Status(LauncherS, LauncherB, n, RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoRun", onreg, offreg)
 
     End Sub
 
