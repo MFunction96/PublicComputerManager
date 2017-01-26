@@ -83,7 +83,7 @@ Public Class Status
         Dim flag As Boolean = True
         Dim i As Integer
         Dim reg As New RegAPI
-        Dim regvalue As RegAPI.VALUE
+        Dim regvalue As RegAPI.REG_VALUE
         Dim intresult As Integer
         Dim strresult As String
 
