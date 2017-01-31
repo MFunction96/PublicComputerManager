@@ -93,20 +93,20 @@ Public Class Status
                 Return reg.GetError()
             End If
             regvalue = reg.GetValue()
-            If regvalue.valuetype = vbString Then
+            If regvalue.valuetype = RegAPI.REG_TYPE.REG_SZ Then
                 strresult = CStr(regvalue.value)
                 If strresult <> CStr(onreg(i).lpvalue) Then
                     state = False
                     Return OFF_STATE
                 End If
-            ElseIf regvalue.valuetype = vbInteger Then
+            ElseIf regvalue.valuetype = RegAPI.REG_TYPE.REG_DWORD Then
                 intresult = CInt(regvalue.value)
                 If intresult <> CInt(onreg(i).lpvalue) Then
                     state = False
                     Return OFF_STATE
                 End If
             Else
-                If regvalue.valuetype <> vbNull Or onreg(i).isnull <> True Then
+                If regvalue.valuetype <> RegAPI.REG_TYPE.REG_NONE Or onreg(i).isnull <> True Then
                     state = False
                     Return OFF_STATE
                 End If
