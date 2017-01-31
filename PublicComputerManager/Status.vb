@@ -135,7 +135,7 @@ Public Class Status
                 e = reg.GetError()
                 If reg.GetError() = ERROR_CODE.ERROR_FILE_NOT_FOUND Then e = ERROR_CODE.ERROR_SUCCESS
             Else
-                reg.RegSetValue(hKey, lpSubKey, lpValueName, r.lpvalue, r.lpType, r.is64Reg)
+                reg.RegSetValue(hkey, lpsubkey, lpvaluename, New RegAPI.REG_VALUE(r.lpvalue, r.lptype), r.is64reg)
                 e = reg.GetError()
             End If
             If e <> ERROR_CODE.ERROR_SUCCESS Then Return e
