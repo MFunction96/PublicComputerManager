@@ -46,7 +46,7 @@ Public Class RegAPI
         End Sub
     End Structure
     Private Const REG_OPENED_EXISTING_KEY As Integer = &H2
-    Private regvalue As REG_VALUE
+    Private regvalue As REG_VALUE = Nothing
     Private returnvalue As ERROR_CODE = ERROR_CODE.ERROR_NOACCESS
     Public Function GetValue() As REG_VALUE
         Return regvalue
