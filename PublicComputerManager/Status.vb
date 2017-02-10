@@ -1,113 +1,134 @@
 ﻿'**********************************************************
 '名称：状态类
 '功能：用于查询当前计算机的功能相关状态
-'修改时间：2017-01-26
 '**********************************************************
-Public Structure REGVALUESET
-    Dim isnull As Boolean
-    Dim lptype As RegAPI.REG_TYPE
-    Dim lpvalue As Object
-    Dim is64reg As Boolean
+<Serializable()> Public Class RegStatus
+    Inherits RegKey : Implements ICloneable
 
-    Sub New(
-        ByVal isnull As Boolean,
-        ByVal lptype As RegAPI.REG_TYPE,
-        ByVal lpvalue As Object,
-        ByVal is64reg As Boolean)
+    Private _isnull As Boolean
 
-        Me.isnull = isnull
-        Me.lptype = lptype
-        Me.lpvalue = lpvalue
-        Me.is64reg = is64reg
+    Public Sub New(
+               ByRef state As RegStatus)
+
+        MyBase.New(state.hkey(), state.lpsubkey(), state.lpvaluename(), state.is64reg(), state.lpvaluetype(), state.regvalue())
+        _isnull = state.isnull()
 
     End Sub
 
-    Sub New(
-        ByRef regvalueset As REGVALUESET)
+    Public Sub New(
+               ByRef isNull As Boolean,
+               ByRef reg As RegKey)
 
-        isnull = regvalueset.isnull
-        lptype = regvalueset.lptype
-        lpvalue = regvalueset.lpvalue
-        is64reg = regvalueset.is64reg
+        MyBase.New(reg)
+        _isnull = isNull
 
     End Sub
 
-End Structure
+    Public Sub New(
+               ByRef isNull As Boolean,
+               ByRef reg As RegPath,
+               ByRef lpValueType As RegAPI.REG_TYPE,
+               ByVal regValue As Object)
 
-Public Class Status
+        MyBase.New(reg, lpValueType, regValue)
+        _isnull = isNull
+
+    End Sub
+
+    Public Sub New(
+               ByRef isNull As Boolean,
+               ByRef hKey As RegAPI.REG_ROOT_KEY,
+               ByVal lpSubKey As String,
+               ByVal lpValueName As String,
+               ByRef is64Reg As Boolean,
+               ByRef lpValueType As RegAPI.REG_TYPE,
+               ByVal regValue As Object)
+
+        MyBase.New(hKey, lpSubKey, lpValueName, is64Reg, lpValueType, regValue)
+        _isnull = isNull
+
+    End Sub
+
+    Public Overloads Function Clone() As Object Implements ICloneable.Clone
+        Return MemberwiseClone()
+    End Function
+
+    Public Function isnull() As Boolean
+        Return _isnull
+    End Function
+
+End Class
+
+<Serializable()> Public Class Status : Implements ICloneable
 
     Private Const ON_STATE As Integer = -1
     Private Const OFF_STATE As Integer = 0
 
-    Private state As Boolean
-    Private regnum As Integer
-    Private hkey As RegAPI.REG_ROOT_KEY
-    Private lpsubkey As String
-    Private lpvaluename As String
+    Private _state As Boolean
+    Private _regnum As Integer
 
-    Private label As Label
-    Private button As Button
+    Private _label As Label
+    Private _button As Button
 
-    Private onreg() As REGVALUESET
-    Private offreg() As REGVALUESET
+    Private _onreg() As RegStatus
+    Private _offreg() As RegStatus
 
     Public Sub New(
                ByVal label As Label,
                ByVal button As Button,
                ByVal regNum As Integer,
-               ByVal hKey As RegAPI.REG_ROOT_KEY,
-               ByVal lpSubkey As String,
-               ByVal lpValueName As String,
-               ByRef onReg() As REGVALUESET,
-               ByRef offReg() As REGVALUESET)
+               ByRef onReg() As RegStatus,
+               ByRef offReg() As RegStatus)
 
         Dim i As Integer
 
-        state = False
-        Me.label = label
-        Me.button = button
-        Me.regnum = regNum
-        Me.hkey = hKey
-        Me.lpsubkey = lpSubkey
-        Me.lpvaluename = lpValueName
-        ReDim Me.onreg(regNum), Me.offreg(regNum)
+        _state = False
+        _label = label
+        _button = button
+        _regnum = regNum
+        ReDim _onreg(regNum), _offreg(regNum)
         For i = 0 To regNum - 1 Step 1
-            Me.onreg(i) = onReg(i)
-            Me.offreg(i) = offReg(i)
+            _onreg(i) = CType(onReg(i).Clone(), RegStatus)
+            _offreg(i) = CType(offReg(i).Clone(), RegStatus)
         Next
 
     End Sub
+
+    Public Function Clone() As Object Implements ICloneable.Clone
+        Return MemberwiseClone()
+    End Function
 
     Public Function CheckState() As Integer
 
         Dim flag As Boolean = True
         Dim i As Integer
-        Dim reg As New RegAPI
-        Dim regvalue As RegAPI.REG_VALUE
+        Dim regtemp As RegKey
         Dim intresult As Integer
         Dim strresult As String
 
-        For i = 0 To regnum - 1 Step 1
-            reg.RegGetValue(hkey, lpsubkey, lpvaluename, onreg(i).is64reg)
-            If reg.GetError() <> ERROR_CODE.ERROR_SUCCESS And Not (reg.GetError() = ERROR_CODE.ERROR_FILE_NOT_FOUND And onreg(i).isnull) Then
-                Return reg.GetError()
-            End If
-            regvalue = reg.GetValue()
-            If regvalue.valuetype = RegAPI.REG_TYPE.REG_SZ Then
-                strresult = CStr(regvalue.value)
-                If strresult <> CStr(onreg(i).lpvalue) Then
-                    state = False
+        For i = 0 To _regnum - 1 Step 1
+            Try
+                regtemp = RegAPI.RegGetValue(New RegPath(_onreg(i).hkey, _onreg(i).lpsubkey, _onreg(i).lpvaluename, _onreg(i).is64reg))
+            Catch ex As Exception When Not (Err.Number <> ERROR_CODE.ERROR_FILE_NOT_FOUND And _onreg(i).isnull())
+                MsgBox("错误信息" + Chr(10) + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
+                Return Err.Number
+            End Try
+
+            If regtemp.lpvaluetype = RegAPI.REG_TYPE.REG_SZ Then
+                strresult = CStr(regtemp.regvalue)
+                If strresult <> CStr(_onreg(i).regvalue) Then
+                    _state = False
                     Return OFF_STATE
                 End If
-            ElseIf regvalue.valuetype = RegAPI.REG_TYPE.REG_DWORD Then
-                intresult = CInt(regvalue.value)
-                If intresult <> CInt(onreg(i).lpvalue) Then
-                    state = False
+            ElseIf regtemp.lpvaluetype = RegAPI.REG_TYPE.REG_DWORD Then
+                intresult = CInt(regtemp.regvalue)
+                If intresult <> CInt(_onreg(i).regvalue) Then
+                    _state = False
                     Return OFF_STATE
                 End If
             Else
-                If regvalue.valuetype <> RegAPI.REG_TYPE.REG_NONE Or onreg(i).isnull <> True Then
-                    state = False
+                If regtemp.lpvaluetype <> RegAPI.REG_TYPE.REG_NONE Or _onreg(i).IsNull <> True Then
+                    _state = False
                     Return OFF_STATE
                 End If
             End If
@@ -117,30 +138,36 @@ Public Class Status
 
     End Function
 
-    Public Function ChangeState() As ERROR_CODE
+    Public Function ChangeState() As Integer
 
         Dim i As Integer
-        Dim r As REGVALUESET
+        Dim r As RegStatus
         Dim e As ERROR_CODE
-        Dim reg As New RegAPI
 
-        For i = 0 To regnum - 1 Step 1
-            If state Then
-                r = offreg(i)
+        For i = 0 To _regnum - 1 Step 1
+            If _state Then
+                r = _offreg(i)
             Else
-                r = onreg(i)
+                r = _onreg(i)
             End If
-            If r.isNull Then
-                reg.RegDel(hkey, lpsubkey, r.is64reg, lpvaluename)
-                e = reg.GetError()
-                If reg.GetError() = ERROR_CODE.ERROR_FILE_NOT_FOUND Then e = ERROR_CODE.ERROR_SUCCESS
+            If r.IsNull() Then
+                Try
+                    RegAPI.RegDel(New RegPath(r.hkey, r.lpsubkey, r.lpvaluename, r.is64reg))
+                Catch ex As Exception When Err.Number <> ERROR_CODE.ERROR_FILE_NOT_FOUND Or Err.Number <> ERROR_CODE.ERROR_PATH_NOT_FOUND
+                    MsgBox("错误信息" + Chr(10) + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
+                    Return Err.Number
+                End Try
             Else
-                reg.RegSetValue(hkey, lpsubkey, lpvaluename, New RegAPI.REG_VALUE(r.lpvalue, r.lptype), r.is64reg)
-                e = reg.GetError()
+                Try
+                    RegAPI.RegSetValue(New RegKey(r.hkey, r.lpsubkey, r.lpvaluename, r.is64reg, r.lpvaluetype, r.regvalue))
+                Catch ex As Exception
+                    MsgBox("错误信息" + Chr(10) + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
+                    Return Err.Number
+                End Try
             End If
-            If e <> ERROR_CODE.ERROR_SUCCESS Then Return e
         Next
 
+        _state = Not _state
         e = ERROR_CODE.ERROR_SUCCESS
         Return e
 
