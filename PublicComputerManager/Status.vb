@@ -71,20 +71,20 @@ Namespace StatusOpera
                     regtemp = New RegKey(New RegPath(_onreg(i).hkey, _onreg(i).lpsubkey, _onreg(i).lpvaluename, _onreg(i).is64reg))
                 End Try
 
-                If regtemp.lpvaluetype = RegAPI.REG_TYPE.REG_SZ Then
+                If regtemp.lpvaluetype = REG_TYPE.REG_SZ Then
                     strresult = CStr(regtemp.regvalue)
                     If strresult <> CStr(_onreg(i).regvalue) Then
                         _state = False
                         Return OFF_STATE
                     End If
-                ElseIf regtemp.lpvaluetype = RegAPI.REG_TYPE.REG_DWORD Then
+                ElseIf regtemp.lpvaluetype = REG_TYPE.REG_DWORD Then
                     intresult = CInt(regtemp.regvalue)
                     If intresult <> CInt(_onreg(i).regvalue) Then
                         _state = False
                         Return OFF_STATE
                     End If
                 Else
-                    If regtemp.lpvaluetype <> RegAPI.REG_TYPE.REG_NONE Or _onreg(i).isnull <> True Then
+                    If regtemp.lpvaluetype <> REG_TYPE.REG_NONE Or _onreg(i).isnull <> True Then
                         _state = False
                         Return OFF_STATE
                     End If

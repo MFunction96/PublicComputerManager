@@ -5,9 +5,30 @@
 
 Namespace RegOpera
 
+    Public Enum REG_TYPE
+        REG_NONE = 0
+        REG_SZ = 1
+        REG_EXPAND_SZ = 2
+        REG_BINARY = 3
+        REG_DWORD = 4
+        REG_DWORD_LITTLE_ENDIAN = 4
+        REG_DWORD_BIG_ENDIAN = 5
+        REG_MULTI_SZ = 7
+    End Enum
+
+    Public Enum REG_ROOT_KEY
+        HKEY_CLASSES_ROOT = &H80000000
+        HKEY_CURRENT_USER = &H80000001
+        HKEY_LOCAL_MACHINE = &H80000002
+        HKEY_USERS = &H80000003
+        HKEY_PERFORMANCE_DATA = &H80000004
+        HKEY_CURRENT_CONFIG = &H80000005
+        HKEY_DYN_DATA = &H80000006
+    End Enum
+
     <Serializable()> Public Class RegPath : Implements ICloneable
 
-        Private _hkey As RegAPI.REG_ROOT_KEY
+        Private _hkey As REG_ROOT_KEY
         Private _lpsubkey As String
         Private _lpvaluename As String
         Private _is64reg As Boolean
@@ -23,7 +44,7 @@ Namespace RegOpera
         End Sub
 
         Public Sub New(
-                   ByRef hKey As RegAPI.REG_ROOT_KEY,
+                   ByRef hKey As REG_ROOT_KEY,
                    ByVal lpSubKey As String,
                    Optional ByVal lpValueName As String = vbNullString,
                    Optional ByRef is64Reg As Boolean = False)
@@ -38,7 +59,7 @@ Namespace RegOpera
             Return MemberwiseClone()
         End Function
 
-        Public Function hkey() As RegAPI.REG_ROOT_KEY
+        Public Function hkey() As REG_ROOT_KEY
             Return _hkey
         End Function
 
@@ -58,7 +79,7 @@ Namespace RegOpera
     <Serializable()> Public Class RegKey
         Inherits RegPath : Implements ICloneable
 
-        Private _lpvaluetype As RegAPI.REG_TYPE
+        Private _lpvaluetype As REG_TYPE
         Private _regvalue As Object
 
         Public Sub New(
@@ -72,7 +93,7 @@ Namespace RegOpera
 
         Public Sub New(
                    ByRef reg As RegPath,
-                   Optional ByRef lpValueType As RegAPI.REG_TYPE = RegAPI.REG_TYPE.REG_NONE,
+                   Optional ByRef lpValueType As REG_TYPE = REG_TYPE.REG_NONE,
                    Optional ByVal regValue As Object = Nothing)
 
             MyBase.New(reg)
@@ -82,11 +103,11 @@ Namespace RegOpera
         End Sub
 
         Public Sub New(
-                   ByRef hKey As RegAPI.REG_ROOT_KEY,
+                   ByRef hKey As REG_ROOT_KEY,
                    ByVal lpSubKey As String,
                    Optional ByVal lpValueName As String = vbNullString,
                    Optional ByRef is64Reg As Boolean = False,
-                   Optional ByRef lpValueType As RegAPI.REG_TYPE = RegAPI.REG_TYPE.REG_NONE,
+                   Optional ByRef lpValueType As REG_TYPE = REG_TYPE.REG_NONE,
                    Optional ByVal regValue As Object = Nothing)
 
             MyBase.New(hKey, lpSubKey, lpValueName, is64Reg)
@@ -99,7 +120,7 @@ Namespace RegOpera
             Return MemberwiseClone()
         End Function
 
-        Public Function lpvaluetype() As RegAPI.REG_TYPE
+        Public Function lpvaluetype() As REG_TYPE
             Return _lpvaluetype
         End Function
 
@@ -134,7 +155,7 @@ Namespace RegOpera
         Public Sub New(
                    ByRef isNull As Boolean,
                    ByRef reg As RegPath,
-                   ByRef lpValueType As RegAPI.REG_TYPE,
+                   ByRef lpValueType As REG_TYPE,
                    ByVal regValue As Object)
 
             MyBase.New(reg, lpValueType, regValue)
@@ -144,11 +165,11 @@ Namespace RegOpera
 
         Public Sub New(
                    ByRef isNull As Boolean,
-                   ByRef hKey As RegAPI.REG_ROOT_KEY,
+                   ByRef hKey As REG_ROOT_KEY,
                    ByVal lpSubKey As String,
                    ByVal lpValueName As String,
                    ByRef is64Reg As Boolean,
-                   ByRef lpValueType As RegAPI.REG_TYPE,
+                   ByRef lpValueType As REG_TYPE,
                    ByVal regValue As Object)
 
             MyBase.New(hKey, lpSubKey, lpValueName, is64Reg, lpValueType, regValue)
@@ -177,27 +198,6 @@ Namespace RegOpera
             KEY_ALL_ACCESS = &H3F
             KEY_WOW64_64KEY = &H100
             KEY_WOW64_32KEY = &H200
-        End Enum
-
-        Public Enum REG_TYPE
-            REG_NONE = 0
-            REG_SZ = 1
-            REG_EXPAND_SZ = 2
-            REG_BINARY = 3
-            REG_DWORD = 4
-            REG_DWORD_LITTLE_ENDIAN = 4
-            REG_DWORD_BIG_ENDIAN = 5
-            REG_MULTI_SZ = 7
-        End Enum
-
-        Public Enum REG_ROOT_KEY
-            HKEY_CLASSES_ROOT = &H80000000
-            HKEY_CURRENT_USER = &H80000001
-            HKEY_LOCAL_MACHINE = &H80000002
-            HKEY_USERS = &H80000003
-            HKEY_PERFORMANCE_DATA = &H80000004
-            HKEY_CURRENT_CONFIG = &H80000005
-            HKEY_DYN_DATA = &H80000006
         End Enum
 
         Private Const REG_OPENED_EXISTING_KEY As Integer = &H2
