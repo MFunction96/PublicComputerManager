@@ -53,9 +53,9 @@ Partial Class MainForm
         Me.LauncherS = New System.Windows.Forms.Label()
         Me.CmdS = New System.Windows.Forms.Label()
         Me.LauncherT = New System.Windows.Forms.Label()
-        Me.ConPalB = New System.Windows.Forms.Button()
-        Me.ConPalS = New System.Windows.Forms.Label()
-        Me.ConPalT = New System.Windows.Forms.Label()
+        Me.CtrlPalB = New System.Windows.Forms.Button()
+        Me.CtrlPalS = New System.Windows.Forms.Label()
+        Me.CtrlPalT = New System.Windows.Forms.Label()
         Me.MmcB = New System.Windows.Forms.Button()
         Me.MmcS = New System.Windows.Forms.Label()
         Me.MmcT = New System.Windows.Forms.Label()
@@ -245,9 +245,9 @@ Partial Class MainForm
         Me.ManageLimit.Controls.Add(Me.LauncherS)
         Me.ManageLimit.Controls.Add(Me.CmdS)
         Me.ManageLimit.Controls.Add(Me.LauncherT)
-        Me.ManageLimit.Controls.Add(Me.ConPalB)
-        Me.ManageLimit.Controls.Add(Me.ConPalS)
-        Me.ManageLimit.Controls.Add(Me.ConPalT)
+        Me.ManageLimit.Controls.Add(Me.CtrlPalB)
+        Me.ManageLimit.Controls.Add(Me.CtrlPalS)
+        Me.ManageLimit.Controls.Add(Me.CtrlPalT)
         Me.ManageLimit.Controls.Add(Me.MmcB)
         Me.ManageLimit.Controls.Add(Me.MmcS)
         Me.ManageLimit.Controls.Add(Me.MmcT)
@@ -411,35 +411,35 @@ Partial Class MainForm
         Me.LauncherT.TabIndex = 21
         Me.LauncherT.Text = "运行工具状态"
         '
-        'ConPalB
+        'CtrlPalB
         '
-        Me.ConPalB.Enabled = False
-        Me.ConPalB.Location = New System.Drawing.Point(246, 145)
-        Me.ConPalB.Name = "ConPalB"
-        Me.ConPalB.Size = New System.Drawing.Size(84, 31)
-        Me.ConPalB.TabIndex = 11
-        Me.ConPalB.Text = "检测中..."
-        Me.ConPalB.UseVisualStyleBackColor = True
+        Me.CtrlPalB.Enabled = False
+        Me.CtrlPalB.Location = New System.Drawing.Point(246, 145)
+        Me.CtrlPalB.Name = "CtrlPalB"
+        Me.CtrlPalB.Size = New System.Drawing.Size(84, 31)
+        Me.CtrlPalB.TabIndex = 11
+        Me.CtrlPalB.Text = "检测中..."
+        Me.CtrlPalB.UseVisualStyleBackColor = True
         '
-        'ConPalS
+        'CtrlPalS
         '
-        Me.ConPalS.AutoSize = True
-        Me.ConPalS.Font = New System.Drawing.Font("宋体", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
-        Me.ConPalS.ForeColor = System.Drawing.Color.DarkGray
-        Me.ConPalS.Location = New System.Drawing.Point(158, 155)
-        Me.ConPalS.Name = "ConPalS"
-        Me.ConPalS.Size = New System.Drawing.Size(82, 15)
-        Me.ConPalS.TabIndex = 19
-        Me.ConPalS.Text = "检测中..."
+        Me.CtrlPalS.AutoSize = True
+        Me.CtrlPalS.Font = New System.Drawing.Font("宋体", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
+        Me.CtrlPalS.ForeColor = System.Drawing.Color.DarkGray
+        Me.CtrlPalS.Location = New System.Drawing.Point(158, 155)
+        Me.CtrlPalS.Name = "CtrlPalS"
+        Me.CtrlPalS.Size = New System.Drawing.Size(82, 15)
+        Me.CtrlPalS.TabIndex = 19
+        Me.CtrlPalS.Text = "检测中..."
         '
-        'ConPalT
+        'CtrlPalT
         '
-        Me.ConPalT.AutoSize = True
-        Me.ConPalT.Location = New System.Drawing.Point(40, 153)
-        Me.ConPalT.Name = "ConPalT"
-        Me.ConPalT.Size = New System.Drawing.Size(97, 15)
-        Me.ConPalT.TabIndex = 18
-        Me.ConPalT.Text = "控制面板状态"
+        Me.CtrlPalT.AutoSize = True
+        Me.CtrlPalT.Location = New System.Drawing.Point(40, 153)
+        Me.CtrlPalT.Name = "CtrlPalT"
+        Me.CtrlPalT.Size = New System.Drawing.Size(97, 15)
+        Me.CtrlPalT.TabIndex = 18
+        Me.CtrlPalT.Text = "控制面板状态"
         '
         'MmcB
         '
@@ -553,9 +553,9 @@ Partial Class MainForm
     Friend WithEvents CmdB As Button
     Friend WithEvents CmdS As Label
     Friend WithEvents CmdT As Label
-    Friend WithEvents ConPalB As Button
-    Friend WithEvents ConPalS As Label
-    Friend WithEvents ConPalT As Label
+    Friend WithEvents CtrlPalB As Button
+    Friend WithEvents CtrlPalS As Label
+    Friend WithEvents CtrlPalT As Label
     Friend WithEvents LauncherB As Button
     Friend WithEvents LauncherS As Label
     Friend WithEvents LauncherT As Label

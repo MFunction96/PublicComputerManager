@@ -106,6 +106,63 @@ End Class
 
 End Class
 
+<Serializable()> Public Class RegStore
+    Inherits RegKey : Implements ICloneable
+
+    Private _isnull As Boolean
+
+    Public Sub New(
+               ByRef store As RegStore)
+
+        MyBase.New(store.hkey(), store.lpsubkey(), store.lpvaluename(), store.is64reg(), store.lpvaluetype(), store.regvalue())
+        _isnull = store.isnull()
+
+    End Sub
+
+    Public Sub New(
+               ByRef isNull As Boolean,
+               ByRef reg As RegKey)
+
+        MyBase.New(reg)
+        _isnull = isNull
+
+    End Sub
+
+    Public Sub New(
+               ByRef isNull As Boolean,
+               ByRef reg As RegPath,
+               ByRef lpValueType As RegAPI.REG_TYPE,
+               ByVal regValue As Object)
+
+        MyBase.New(reg, lpValueType, regValue)
+        _isnull = isNull
+
+    End Sub
+
+    Public Sub New(
+               ByRef isNull As Boolean,
+               ByRef hKey As RegAPI.REG_ROOT_KEY,
+               ByVal lpSubKey As String,
+               ByVal lpValueName As String,
+               ByRef is64Reg As Boolean,
+               ByRef lpValueType As RegAPI.REG_TYPE,
+               ByVal regValue As Object)
+
+        MyBase.New(hKey, lpSubKey, lpValueName, is64Reg, lpValueType, regValue)
+        _isnull = isNull
+
+    End Sub
+
+    Public Overloads Function Clone() As Object Implements ICloneable.Clone
+        Return MemberwiseClone()
+    End Function
+
+    Public Function isnull() As Boolean
+        Return _isnull
+    End Function
+
+End Class
+
 Public Class RegAPI
 
     Private Enum OPERATE_OPTION
@@ -174,7 +231,7 @@ Public Class RegAPI
 
         reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.lpvaluename(), IntPtr.op_Explicit(0), lptype, vbNullString, lpcbdata)
         If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
-            reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
+            NativeMethods.RegCloseKey(phkresult)
             Err.Raise(reggetvaluetemp)
             Return New RegKey(reg)
         End If
@@ -183,7 +240,7 @@ Public Class RegAPI
             lpdatastr = StrDup(lpcbdata, Chr(0))
             reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.lpvaluename(), IntPtr.op_Explicit(0), lptype, lpdatastr, lpcbdata)
             If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
-                reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
+                NativeMethods.RegCloseKey(phkresult)
                 Err.Raise(reggetvaluetemp)
                 Return New RegKey(reg)
             End If
@@ -196,19 +253,19 @@ Public Class RegAPI
             reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.lpvaluename(), IntPtr.op_Explicit(0), lptype, lpdataint, lpcbdata)
             If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                 Err.Raise(reggetvaluetemp)
-                reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
+                NativeMethods.RegCloseKey(phkresult)
                 Return New RegKey(reg)
             End If
             regtemp = New RegKey(reg, lptype, lpdataint)
         End If
 
         If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
-            reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
+            NativeMethods.RegCloseKey(phkresult)
             Err.Raise(reggetvaluetemp)
             Return New RegKey(reg)
         End If
 
-        reggetvaluetemp = NativeMethods.RegCloseKey(phkresult)
+        NativeMethods.RegCloseKey(phkresult)
         Return regtemp
 
     End Function

@@ -1,66 +1,69 @@
 ﻿'**********************************************************
 '名称：主窗体
 '功能：本程序的核心窗口，功能的控制面板
-'修改时间：2017-01-24
 '**********************************************************
 Public Class MainForm
 
-    Private limproc As Status
-    Private limitdisk As Status
-    Private mmc As Status
-    Private registry As Status
-    Private task As Status
-    Private conpal As Status
-    Private launcher As Status
-    Private cmd As Status
-    Private taskmgr As Status
-    Private pwrshell As Status
+    Private limproc As RegStatus
+    Private limitdisk As RegStatus
+    Private mmc As RegStatus
+    Private registry As RegStatus
+    Private task As RegStatus
+    Private conpal As RegStatus
+    Private launcher As RegStatus
+    Private cmd As RegStatus
+    Private taskmgr As RegStatus
+    Private pwrshell As RegStatus
+    Private login As New LoginForm
+
+    Public admin As Boolean = False
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim onreg(), offreg() As RegStatus
+        Dim onreg(), offreg() As RegStore
         Dim regp As RegPath
         Dim n As Integer
         n = 1
         ReDim onreg(n), offreg(n)
         regp = New RegPath(RegAPI.REG_ROOT_KEY.HKEY_LOCAL_MACHINE, "Software\Policies\Microsoft\Windows\safer\codeidentifiers", "DefaultLevel", True)
-        onreg(0) = New RegStatus(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H40000)
-        offreg(0) = New RegStatus(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
-        limproc = New Status(LimProcS, LimProcB, n, onreg, offreg)
+        onreg(0) = New RegStore(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H40000)
+        offreg(0) = New RegStore(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
+        limproc = New RegStatus(n, onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
         regp = New RegPath(RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoDrives", True)
-        onreg(0) = New RegStatus(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H4)
-        offreg(0) = New RegStatus(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
-        limitdisk = New Status(LimitDiskS, LimitDiskB, n, onreg, offreg)
+        onreg(0) = New RegStore(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H4)
+        offreg(0) = New RegStore(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
+        limitdisk = New RegStatus(n, onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
         regp = New RegPath(RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableRegistryTools", True)
-        onreg(0) = New RegStatus(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H2)
-        offreg(0) = New RegStatus(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
-        registry = New Status(RegistryS, RegistryB, n, onreg, offreg)
+        onreg(0) = New RegStore(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H2)
+        offreg(0) = New RegStore(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
+        registry = New RegStatus(n, onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
         regp = New RegPath(RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Policies\Microsoft\Windows\System", "DisableCMD", True)
-        onreg(0) = New RegStatus(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H1)
-        offreg(0) = New RegStatus(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
-        cmd = New Status(CmdS, CmdB, n, onreg, offreg)
+        onreg(0) = New RegStore(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H1)
+        offreg(0) = New RegStore(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
+        cmd = New RegStatus(n, onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
         regp = New RegPath(RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableTaskMgr", True)
-        onreg(0) = New RegStatus(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H1)
-        offreg(0) = New RegStatus(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
-        taskmgr = New Status(TaskmgrS, TaskmgrB, n, onreg, offreg)
+        onreg(0) = New RegStore(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H1)
+        offreg(0) = New RegStore(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
+        taskmgr = New RegStatus(n, onreg, offreg)
         n = 1
         ReDim onreg(n), offreg(n)
         regp = New RegPath(RegAPI.REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoRun", True)
-        onreg(0) = New RegStatus(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H1)
-        offreg(0) = New RegStatus(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
-        launcher = New Status(LauncherS, LauncherB, n, onreg, offreg)
+        onreg(0) = New RegStore(False, regp, RegAPI.REG_TYPE.REG_DWORD, &H1)
+        offreg(0) = New RegStore(True, regp, RegAPI.REG_TYPE.REG_DWORD, &H0)
+        launcher = New RegStatus(n, onreg, offreg)
 
     End Sub
 
     Private Sub AccAdmin_Click(sender As Object, e As EventArgs) Handles AccAdmin.Click
-        Visible = False
+        Enabled = False
+        login.Show()
     End Sub
 
     Private Sub MdfPwd_Click(sender As Object, e As EventArgs) Handles MdfPwd.Click
@@ -96,14 +99,14 @@ Public Class MainForm
     End Sub
 
     Private Sub RegistryB_Click(sender As Object, e As EventArgs) Handles RegistryB.Click
-
+        registry.ChangeState()
     End Sub
 
     Private Sub TaskSchB_Click(sender As Object, e As EventArgs) Handles TaskSchB.Click
 
     End Sub
 
-    Private Sub ConPalB_Click(sender As Object, e As EventArgs) Handles ConPalB.Click
+    Private Sub CtrlPalB_Click(sender As Object, e As EventArgs) Handles CtrlPalB.Click
 
     End Sub
 
@@ -122,4 +125,5 @@ Public Class MainForm
     Private Sub PwrShellB_Click(sender As Object, e As EventArgs) Handles PwrShellB.Click
 
     End Sub
+
 End Class
