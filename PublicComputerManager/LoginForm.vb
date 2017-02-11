@@ -2,7 +2,9 @@
 '名称：登录窗体
 '功能：作为管理员登录界面
 '**********************************************************
+
 Public Class LoginForm
+
     Private Sub Login_Click(sender As Object, e As EventArgs) Handles Login.Click
         With MainForm
             .AccAdmin.Enabled = False

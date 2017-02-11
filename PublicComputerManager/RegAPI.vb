@@ -3,6 +3,8 @@
 '功能：注册表信息的创建、赋值、读取、删除
 '**********************************************************
 
+Imports PublicComputerManager.PInvoke
+
 Namespace RegOpera
 
     Public Enum REG_TYPE

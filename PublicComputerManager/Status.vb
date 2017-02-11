@@ -4,6 +4,7 @@
 '**********************************************************
 
 Imports PublicComputerManager.RegOpera
+Imports PublicComputerManager.PInvoke
 
 Namespace StatusOpera
 

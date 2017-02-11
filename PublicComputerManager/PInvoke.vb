@@ -1,12 +1,11 @@
 ﻿'**********************************************************
 '名称：P/Invoke模块
 '功能：实现非托管代码的P/Invoke方法
-'修改时间：2017-01-24
 '**********************************************************
 
 Imports PublicComputerManager.RegOpera
 
-Public Module PInvoke
+Namespace PInvoke
 
     Public Enum ERROR_CODE
         ERROR_SUCCESS = &H0
@@ -194,4 +193,5 @@ Public Module PInvoke
         End Function
 
     End Class
-End Module
+
+End Namespace
