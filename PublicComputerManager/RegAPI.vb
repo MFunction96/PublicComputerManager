@@ -28,7 +28,9 @@ Namespace RegOpera
         HKEY_DYN_DATA = &H80000006
     End Enum
 
-    <Serializable()> Public Class RegPath : Implements ICloneable
+    <Serializable()>
+    Public Class RegPath
+        Implements ICloneable
 
         Private _hkey As REG_ROOT_KEY
         Private _lpsubkey As String
@@ -78,8 +80,10 @@ Namespace RegOpera
         End Function
 
     End Class
-    <Serializable()> Public Class RegKey
-        Inherits RegPath : Implements ICloneable
+    <Serializable()>
+    Public Class RegKey
+        Inherits RegPath
+        Implements ICloneable
 
         Private _lpvaluetype As REG_TYPE
         Private _regvalue As Object
@@ -132,8 +136,10 @@ Namespace RegOpera
 
     End Class
 
-    <Serializable()> Public Class RegStore
-        Inherits RegKey : Implements ICloneable
+    <Serializable()>
+    Public Class RegStore
+        Inherits RegKey
+        Implements ICloneable
 
         Private _isnull As Boolean
 

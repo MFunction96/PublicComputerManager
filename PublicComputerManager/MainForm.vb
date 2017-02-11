@@ -20,8 +20,6 @@ Public Class MainForm
     Private pwrshell As RegStatus
     Private login As New LoginForm
 
-    Public admin As Boolean = False
-
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim onreg(), offreg() As RegStore
         Dim regp As RegPath

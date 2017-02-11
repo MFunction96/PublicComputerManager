@@ -8,7 +8,9 @@ Imports PublicComputerManager.PInvoke
 
 Namespace StatusOpera
 
-    <Serializable()> Public Class RegStatus : Implements ICloneable
+    <Serializable()>
+    Public Class RegStatus
+        Implements ICloneable
 
         Private Const ON_STATE As Integer = -1
         Private Const OFF_STATE As Integer = 0
@@ -135,8 +137,10 @@ Namespace StatusOpera
 
     End Class
 
-    <Serializable()> Public Class Status
-        Inherits RegStatus : Implements ICloneable
+    <Serializable()>
+    Public Class Status
+        Inherits RegStatus
+        Implements ICloneable
 
         Private _tip As Label
         Private _ctrl As Button
