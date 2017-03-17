@@ -1,16 +1,36 @@
 ﻿'**********************************************************
 '名称：MD5加密类
 '功能：用于数据加密
-'修改时间：2017-01-24
 '**********************************************************
+''' <summary>
+''' MD5加密类
+''' </summary>
 Public Class MD5Crypt
-    Public Sub DESEncrypt()
-    End Sub
 
+    ''' <summary>
+    ''' 默认密码加密
+    ''' </summary>
+    ''' <param name="Text">
+    ''' 需要加密的文本
+    ''' </param>
+    ''' <returns>
+    ''' 加密后文本
+    ''' </returns>
     Public Function Encrypt(ByVal Text As String) As String
         Return Encrypt(Text, "MFunction")
     End Function
-
+    ''' <summary>
+    ''' 自定义密码加密
+    ''' </summary>
+    ''' <param name="Text">
+    ''' 需要加密的文本
+    ''' </param>
+    ''' <param name="sKey">
+    ''' 自定义加密密码
+    ''' </param>
+    ''' <returns>
+    ''' 加密后文本
+    ''' </returns>
     Public Function Encrypt(ByVal Text As String, ByVal sKey As String) As String
         Dim des As New DESCryptoServiceProvider()
         Dim inputByteArray As Byte()
@@ -28,11 +48,30 @@ Public Class MD5Crypt
         Next
         Return ret.ToString()
     End Function
-
+    ''' <summary>
+    ''' 默认密码解密
+    ''' </summary>
+    ''' <param name="Text">
+    ''' 需要解密的文本
+    ''' </param>
+    ''' <returns>
+    ''' 解密后的文本
+    ''' </returns>
     Public Function Decrypt(ByVal Text As String) As String
         Return Decrypt(Text, "MFunction")
     End Function
-
+    ''' <summary>
+    ''' 自定义密码解密
+    ''' </summary>
+    ''' <param name="Text">
+    ''' 需要解密的文本
+    ''' </param>
+    ''' <param name="sKey">
+    ''' 自定义密码
+    ''' </param>
+    ''' <returns>
+    ''' 解密后的文本
+    ''' </returns>
     Public Function Decrypt(ByVal Text As String, ByVal sKey As String) As String
         Dim des As New DESCryptoServiceProvider()
         Dim len As Integer

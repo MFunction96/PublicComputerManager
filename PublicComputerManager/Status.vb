@@ -8,6 +8,9 @@ Imports PublicComputerManager.PInvoke
 
 Namespace StatusOpera
 
+    ''' <summary>
+    ''' 存储及描述注册表当前状态
+    ''' </summary>
     <Serializable()>
     Public Class RegStatus
         Implements ICloneable
@@ -19,7 +22,12 @@ Namespace StatusOpera
         Protected _regnum As Integer
         Protected _onreg() As RegStore
         Protected _offreg() As RegStore
-
+        ''' <summary>
+        ''' 复制构造函数
+        ''' </summary>
+        ''' <param name="reg">
+        ''' 复制该类所有成员构造操作对象
+        ''' </param>
         Public Sub New(
                    ByRef reg As RegStatus)
 
@@ -35,6 +43,18 @@ Namespace StatusOpera
 
         End Sub
 
+        ''' <summary>
+        ''' 构造函数
+        ''' </summary>
+        ''' <param name="regNum">
+        ''' 表示注册表状态的注册表项数
+        ''' </param>
+        ''' <param name="onReg">
+        ''' 状态为启用时的注册表项
+        ''' </param>
+        ''' <param name="offReg">
+        ''' 状态为关闭时的注册表项
+        ''' </param>
         Public Sub New(
                    ByVal regNum As Integer,
                    ByRef onReg() As RegStore,
@@ -52,10 +72,22 @@ Namespace StatusOpera
 
         End Sub
 
+        ''' <summary>
+        ''' 深复制操作对象的副本
+        ''' </summary>
+        ''' <returns>
+        ''' 返回一个Object类，包含该对象的全部成员
+        ''' </returns>
         Public Function Clone() As Object Implements ICloneable.Clone
             Return MemberwiseClone()
         End Function
 
+        ''' <summary>
+        ''' 检查并获取注册表值满足该类处于何种状态
+        ''' </summary>
+        ''' <returns>
+        ''' 若返回负数则表示状态开启；若返回0表示状态关闭；若返回正数则表示处理异常，该数对应Windows异常代码。
+        ''' </returns>
         Public Function CheckState() As Integer
 
             Dim flag As Boolean = True
@@ -98,6 +130,12 @@ Namespace StatusOpera
 
         End Function
 
+        ''' <summary>
+        ''' 更换操作对象状态并修改相应注册表值
+        ''' </summary>
+        ''' <returns>
+        ''' 若返回负数则表示状态开启；若返回0表示状态关闭；若返回正数则表示处理异常，该数对应Windows异常代码。
+        ''' </returns>
         Public Function ChangeState() As Integer
 
             Dim i As Integer
@@ -137,6 +175,9 @@ Namespace StatusOpera
 
     End Class
 
+    ''' <summary>
+    ''' 
+    ''' </summary>
     <Serializable()>
     Public Class Status
         Inherits RegStatus
@@ -145,6 +186,12 @@ Namespace StatusOpera
         Private _tip As Label
         Private _ctrl As Button
 
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <param name="state">
+        ''' 
+        ''' </param>
         Public Sub New(
                    ByRef state As Status)
 
@@ -154,6 +201,18 @@ Namespace StatusOpera
 
         End Sub
 
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <param name="tip">
+        ''' 
+        ''' </param>
+        ''' <param name="ctrl">
+        ''' 
+        ''' </param>
+        ''' <param name="reg">
+        ''' 
+        ''' </param>
         Public Sub New(
                    ByRef tip As Label,
                    ByRef ctrl As Button,
@@ -165,6 +224,31 @@ Namespace StatusOpera
 
         End Sub
 
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        Public Overloads Sub ChangeState()
+
+            MyBase.ChangeState()
+
+
+        End Sub
+
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        Public Overloads Sub CheckState()
+
+            MyBase.CheckState()
+
+        End Sub
+
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <returns>
+        ''' 
+        ''' </returns>
         Public Overloads Function Clone() As Object Implements ICloneable.Clone
             Return MemberwiseClone()
         End Function

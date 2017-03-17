@@ -7,6 +7,9 @@ Imports PublicComputerManager.PInvoke
 
 Namespace RegOpera
 
+    ''' <summary>
+    ''' 注册表类型常量枚举
+    ''' </summary>
     Public Enum REG_TYPE
         REG_NONE = 0
         REG_SZ = 1
@@ -17,7 +20,9 @@ Namespace RegOpera
         REG_DWORD_BIG_ENDIAN = 5
         REG_MULTI_SZ = 7
     End Enum
-
+    ''' <summary>
+    ''' 注册表根键常量枚举
+    ''' </summary>
     Public Enum REG_ROOT_KEY
         HKEY_CLASSES_ROOT = &H80000000
         HKEY_CURRENT_USER = &H80000001
@@ -27,7 +32,9 @@ Namespace RegOpera
         HKEY_CURRENT_CONFIG = &H80000005
         HKEY_DYN_DATA = &H80000006
     End Enum
-
+    ''' <summary>
+    ''' 注册表路径类
+    ''' </summary>
     <Serializable()>
     Public Class RegPath
         Implements ICloneable
@@ -36,7 +43,12 @@ Namespace RegOpera
         Private _lpsubkey As String
         Private _lpvaluename As String
         Private _is64reg As Boolean
-
+        ''' <summary>
+        ''' 复制构造函数
+        ''' </summary>
+        ''' <param name="reg">
+        ''' 复制该对象的所有成员
+        ''' </param>
         Public Sub New(
                    ByRef reg As RegPath)
 
@@ -47,6 +59,21 @@ Namespace RegOpera
 
         End Sub
 
+        ''' <summary>
+        ''' 构造函数
+        ''' </summary>
+        ''' <param name="hKey">
+        ''' 注册表主键
+        ''' </param>
+        ''' <param name="lpSubKey">
+        ''' 注册表子键
+        ''' </param>
+        ''' <param name="lpValueName">
+        ''' 注册表键名
+        ''' </param>
+        ''' <param name="is64Reg">
+        ''' 注册表操作位宽
+        ''' </param>
         Public Sub New(
                    ByRef hKey As REG_ROOT_KEY,
                    ByVal lpSubKey As String,
@@ -59,27 +86,57 @@ Namespace RegOpera
             _is64reg = is64Reg
 
         End Sub
+        ''' <summary>
+        ''' 深复制操作对象的副本
+        ''' </summary>
+        ''' <returns>
+        ''' 返回一个Object类，包含该对象的全部成员
+        ''' </returns>
         Public Function Clone() As Object Implements ICloneable.Clone
             Return MemberwiseClone()
         End Function
 
+        ''' <summary>
+        ''' 获取操作对象的主键属性
+        ''' </summary>
+        ''' <returns>
+        ''' 返回操作对象的主键属性
+        ''' </returns>
         Public Function hkey() As REG_ROOT_KEY
             Return _hkey
         End Function
-
+        ''' <summary>
+        ''' 获取操作对象的子键属性
+        ''' </summary>
+        ''' <returns>
+        ''' 返回操作对象的子键属性
+        ''' </returns>
         Public Function lpsubkey() As String
             Return _lpsubkey
         End Function
-
+        ''' <summary>
+        ''' 获取操作对象的键名属性
+        ''' </summary>
+        ''' <returns>
+        ''' 返回操作对象的键名属性
+        ''' </returns>
         Public Function lpvaluename() As String
             Return _lpvaluename
         End Function
-
+        ''' <summary>
+        ''' 获取操作对象的操作注册表位宽属性
+        ''' </summary>
+        ''' <returns>
+        ''' 返回操作对象的操作注册表位宽属性
+        ''' </returns>
         Public Function is64reg() As Boolean
             Return _is64reg
         End Function
 
     End Class
+    ''' <summary>
+    ''' 注册表键类
+    ''' </summary>
     <Serializable()>
     Public Class RegKey
         Inherits RegPath
@@ -87,7 +144,12 @@ Namespace RegOpera
 
         Private _lpvaluetype As REG_TYPE
         Private _regvalue As Object
-
+        ''' <summary>
+        ''' 复制构造函数
+        ''' </summary>
+        ''' <param name="reg">
+        ''' 复制该对象的所有成员
+        ''' </param>
         Public Sub New(
                    ByRef reg As RegKey)
 
@@ -96,7 +158,18 @@ Namespace RegOpera
             _regvalue = reg.regvalue()
 
         End Sub
-
+        ''' <summary>
+        ''' 构造函数
+        ''' </summary>
+        ''' <param name="reg">
+        ''' 构造对象的注册表路径
+        ''' </param>
+        ''' <param name="lpValueType">
+        ''' 构造对象的注册表键值类型
+        ''' </param>
+        ''' <param name="regValue">
+        ''' 构造对象的注册表键值
+        ''' </param>
         Public Sub New(
                    ByRef reg As RegPath,
                    Optional ByRef lpValueType As REG_TYPE = REG_TYPE.REG_NONE,
@@ -107,7 +180,27 @@ Namespace RegOpera
             _regvalue = regValue
 
         End Sub
-
+        ''' <summary>
+        ''' 构造函数
+        ''' </summary>
+        ''' <param name="hKey">
+        ''' 构造注册表路径的主键
+        ''' </param>
+        ''' <param name="lpSubKey">
+        ''' 构造注册表路径的子键
+        ''' </param>
+        ''' <param name="lpValueName">
+        ''' 构造注册表路径的键名
+        ''' </param>
+        ''' <param name="is64Reg">
+        ''' 构造注册表路径的操作位宽
+        ''' </param>
+        ''' <param name="lpValueType">
+        ''' 构造注册表的键值类型
+        ''' </param>
+        ''' <param name="regValue">
+        ''' 构造注册表的键值
+        ''' </param>
         Public Sub New(
                    ByRef hKey As REG_ROOT_KEY,
                    ByVal lpSubKey As String,
@@ -121,28 +214,50 @@ Namespace RegOpera
             _regvalue = regValue
 
         End Sub
-
+        ''' <summary>
+        ''' 深复制操作对象的副本
+        ''' </summary>
+        ''' <returns>
+        ''' 返回一个Object类，包含该对象的全部成员
+        ''' </returns>
         Public Overloads Function Clone() As Object Implements ICloneable.Clone
             Return MemberwiseClone()
         End Function
-
+        ''' <summary>
+        ''' 获取操作对象的键值类型属性
+        ''' </summary>
+        ''' <returns>
+        ''' 返回操作对象的键值类型属性
+        ''' </returns>
         Public Function lpvaluetype() As REG_TYPE
             Return _lpvaluetype
         End Function
-
+        ''' <summary>
+        ''' 获取操作对象的键值属性
+        ''' </summary>
+        ''' <returns>
+        ''' 返回操作对象的键值属性
+        ''' </returns>
         Public Function regvalue() As Object
             Return _regvalue
         End Function
 
     End Class
-
+    ''' <summary>
+    ''' 注册表存储类
+    ''' </summary>
     <Serializable()>
     Public Class RegStore
         Inherits RegKey
         Implements ICloneable
 
         Private _isnull As Boolean
-
+        ''' <summary>
+        ''' 复制构造函数
+        ''' </summary>
+        ''' <param name="store">
+        ''' 复制该对象的所有成员
+        ''' </param>
         Public Sub New(
                    ByRef store As RegStore)
 
@@ -150,7 +265,15 @@ Namespace RegOpera
             _isnull = store.isnull()
 
         End Sub
-
+        ''' <summary>
+        ''' 构造函数
+        ''' </summary>
+        ''' <param name="isNull">
+        ''' 表示注册表项是否可以为空
+        ''' </param>
+        ''' <param name="reg">
+        ''' 构造注册表健
+        ''' </param>
         Public Sub New(
                    ByRef isNull As Boolean,
                    ByRef reg As RegKey)
@@ -159,7 +282,21 @@ Namespace RegOpera
             _isnull = isNull
 
         End Sub
-
+        ''' <summary>
+        ''' 构造函数
+        ''' </summary>
+        ''' <param name="isNull">
+        ''' 表示注册表项是否可以为空
+        ''' </param>
+        ''' <param name="reg">
+        ''' 构造注册表路径
+        ''' </param>
+        ''' <param name="lpValueType">
+        ''' 构造注册表键值类型
+        ''' </param>
+        ''' <param name="regValue">
+        ''' 构造注册表键值
+        ''' </param>
         Public Sub New(
                    ByRef isNull As Boolean,
                    ByRef reg As RegPath,
@@ -170,7 +307,30 @@ Namespace RegOpera
             _isnull = isNull
 
         End Sub
-
+        ''' <summary>
+        ''' 构造函数
+        ''' </summary>
+        ''' <param name="isNull">
+        ''' 表示注册表项是否可以为空
+        ''' </param>
+        ''' <param name="hKey">
+        ''' 构造注册表路径主键
+        ''' </param>
+        ''' <param name="lpSubKey">
+        ''' 构造注册表路径子键
+        ''' </param>
+        ''' <param name="lpValueName">
+        ''' 构造注册表路径键名
+        ''' </param>
+        ''' <param name="is64Reg">
+        ''' 构造注册表操作位宽
+        ''' </param>
+        ''' <param name="lpValueType">
+        ''' 构造注册表键值类型
+        ''' </param>
+        ''' <param name="regValue">
+        ''' 构造注册表键值
+        ''' </param>
         Public Sub New(
                    ByRef isNull As Boolean,
                    ByRef hKey As REG_ROOT_KEY,
@@ -184,17 +344,29 @@ Namespace RegOpera
             _isnull = isNull
 
         End Sub
-
+        ''' <summary>
+        ''' 深复制操作对象的副本
+        ''' </summary>
+        ''' <returns>
+        ''' 返回一个Object类，包含该对象的全部成员
+        ''' </returns>
         Public Overloads Function Clone() As Object Implements ICloneable.Clone
             Return MemberwiseClone()
         End Function
-
+        ''' <summary>
+        ''' 获取操作对象的可以为空属性
+        ''' </summary>
+        ''' <returns>
+        ''' 返回操作对象的可以为空属性
+        ''' </returns>
         Public Function isnull() As Boolean
             Return _isnull
         End Function
 
     End Class
-
+    ''' <summary>
+    ''' 注册表操作类
+    ''' </summary>
     Public Class RegAPI
 
         Private Enum OPERATE_OPTION

@@ -6,7 +6,9 @@
 Imports PublicComputerManager.RegOpera
 
 Namespace PInvoke
-
+    ''' <summary>
+    ''' Windows错误代码常量枚举
+    ''' </summary>
     Public Enum ERROR_CODE
         ERROR_SUCCESS = &H0
         ERROR_FILE_NOT_FOUND = &H2

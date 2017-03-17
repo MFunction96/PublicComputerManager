@@ -2,8 +2,19 @@
 '名称：GUID生成类
 '功能：用于生成各类程序中使用的GUID
 '**********************************************************
+''' <summary>
+''' GUID生成类
+''' </summary>
 Public Class GenerateGUID
-
+    ''' <summary>
+    ''' GUID生成
+    ''' </summary>
+    ''' <param name="isReg">
+    ''' 是否用于注册表
+    ''' </param>
+    ''' <returns>
+    ''' 返回满足要求的GUID值
+    ''' </returns>
     Public Shared Function Generate(
                            ByVal isReg As Boolean) _
                            As String
