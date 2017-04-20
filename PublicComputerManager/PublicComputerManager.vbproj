@@ -150,6 +150,7 @@
     <Compile Include="PInvoke.vb" />
     <Compile Include="RegAPI.vb" />
     <Compile Include="Status.vb" />
+    <Compile Include="XMLControl.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LoginForm.resx">

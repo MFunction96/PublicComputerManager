@@ -7,13 +7,13 @@
 ''' </summary>
 Public Class GenerateGUID
     ''' <summary>
-    ''' GUID生成
+    ''' 生成GUID
     ''' </summary>
     ''' <param name="isReg">
     ''' 是否用于注册表
     ''' </param>
     ''' <returns>
-    ''' 返回满足要求的GUID值
+    ''' 返回GUID字符串
     ''' </returns>
     Public Shared Function Generate(
                            ByVal isReg As Boolean) _
