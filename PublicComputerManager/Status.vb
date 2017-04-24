@@ -3,25 +3,30 @@
 '功能：用于查询当前计算机的功能相关状态
 '**********************************************************
 
-Imports PublicComputerManager.RegOpera
+Imports PublicComputerManager.RegOpt
 Imports PublicComputerManager.PInvoke
 
-Namespace StatusOpera
+Namespace StatusOpt
 
     ''' <summary>
     ''' 存储及描述注册表当前状态
     ''' </summary>
     <Serializable()>
     Public Class RegStatus
-        Implements ICloneable
+        Implements ICloneable, ISerializable
 
-        Private Const ON_STATE As Integer = -1
-        Private Const OFF_STATE As Integer = 0
-
+        Protected Const ON_STATE As Integer = -1
+        Protected Const OFF_STATE As Integer = 0
         Protected _state As Boolean
         Protected _regnum As Integer
-        Protected _onreg() As RegStore
-        Protected _offreg() As RegStore
+        Protected _onreg As RegStore()
+        Protected _offreg As RegStore()
+        ''' <summary>
+        ''' 无参数构造函数支持序列化
+        ''' </summary>
+        Public Sub New()
+
+        End Sub
         ''' <summary>
         ''' 复制构造函数
         ''' </summary>
@@ -35,14 +40,13 @@ Namespace StatusOpera
 
             _state = reg._state
             _regnum = reg._regnum
-            ReDim _onreg(reg._regnum), _offreg(reg._regnum)
+            ReDim _onreg(reg._regnum - 1), _offreg(reg._regnum - 1)
             For i = 0 To reg._regnum - 1 Step 1
                 _onreg(i) = CType(reg._onreg(i).Clone(), RegStore)
                 _offreg(i) = CType(reg._offreg(i).Clone(), RegStore)
             Next
 
         End Sub
-
         ''' <summary>
         ''' 构造函数
         ''' </summary>
@@ -57,21 +61,46 @@ Namespace StatusOpera
         ''' </param>
         Public Sub New(
                    ByVal regNum As Integer,
-                   ByRef onReg() As RegStore,
-                   ByRef offReg() As RegStore)
+                   ByRef onReg As RegStore(),
+                   ByRef offReg As RegStore())
 
             Dim i As Integer
 
             _state = False
             _regnum = regNum
-            ReDim _onreg(regNum), _offreg(regNum)
+            ReDim _onreg(regNum - 1), _offreg(regNum - 1)
             For i = 0 To regNum - 1 Step 1
                 _onreg(i) = CType(onReg(i).Clone(), RegStore)
                 _offreg(i) = CType(offReg(i).Clone(), RegStore)
             Next
 
         End Sub
-
+        ''' <summary>
+        ''' 逆序列化构造函数
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Sub New(info As SerializationInfo, context As StreamingContext)
+            _state = info.GetBoolean("state")
+            _regnum = info.GetInt32("regnum")
+        End Sub
+        ''' <summary>
+        ''' 序列化接口实现方法
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
+            info.AddValue("state", _state)
+            info.AddValue("regnum", _regnum)
+        End Sub
         ''' <summary>
         ''' 深复制操作对象的副本
         ''' </summary>
@@ -98,28 +127,28 @@ Namespace StatusOpera
 
             For i = 0 To _regnum - 1 Step 1
                 Try
-                    regtemp = RegAPI.RegGetValue(New RegPath(_onreg(i).hkey, _onreg(i).lpsubkey, _onreg(i).lpvaluename, _onreg(i).is64reg))
-                Catch ex As Exception When Not (Err.Number() = ERROR_CODE.ERROR_FILE_NOT_FOUND Or Err.Number() = ERROR_CODE.ERROR_PATH_NOT_FOUND And _onreg(i).isnull())
+                    regtemp = RegAPI.RegGetValue(New RegPath(_onreg(i).Hkey, _onreg(i).Lpsubkey, _onreg(i).Lpvaluename, _onreg(i).Is64Reg))
+                Catch ex As Exception When Not (Err.Number() = ERROR_CODE.ERROR_FILE_NOT_FOUND Or Err.Number() = ERROR_CODE.ERROR_PATH_NOT_FOUND And _onreg(i).Isnull())
                     MsgBox("错误代码：" & Err.Number() & Chr(10) + "错误信息：" + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
                     Return Err.Number()
                 Catch ex As Exception
-                    regtemp = New RegKey(New RegPath(_onreg(i).hkey, _onreg(i).lpsubkey, _onreg(i).lpvaluename, _onreg(i).is64reg))
+                    regtemp = New RegKey(New RegPath(_onreg(i).Hkey, _onreg(i).Lpsubkey, _onreg(i).Lpvaluename, _onreg(i).Is64Reg))
                 End Try
 
-                If regtemp.lpvaluetype = REG_TYPE.REG_SZ Then
-                    strresult = CStr(regtemp.regvalue)
-                    If strresult <> CStr(_onreg(i).regvalue) Then
+                If regtemp.Lpvaluetype = RegKey.REG_SZ Then
+                    strresult = CStr(regtemp.Regvalue)
+                    If strresult <> CStr(_onreg(i).Regvalue) Then
                         _state = False
                         Return OFF_STATE
                     End If
-                ElseIf regtemp.lpvaluetype = REG_TYPE.REG_DWORD Then
-                    intresult = CInt(regtemp.regvalue)
-                    If intresult <> CInt(_onreg(i).regvalue) Then
+                ElseIf regtemp.Lpvaluetype = RegKey.REG_DWORD Then
+                    intresult = CInt(regtemp.Regvalue)
+                    If intresult <> CInt(_onreg(i).Regvalue) Then
                         _state = False
                         Return OFF_STATE
                     End If
                 Else
-                    If regtemp.lpvaluetype <> REG_TYPE.REG_NONE Or _onreg(i).isnull <> True Then
+                    If regtemp.Lpvaluetype <> RegKey.REG_NONE Or _onreg(i).Isnull <> True Then
                         _state = False
                         Return OFF_STATE
                     End If
@@ -148,9 +177,9 @@ Namespace StatusOpera
                 Else
                     r = _onreg(i)
                 End If
-                If r.isnull() Then
+                If r.Isnull() Then
                     Try
-                        RegAPI.RegDel(New RegPath(r.hkey, r.lpsubkey, r.lpvaluename, r.is64reg))
+                        RegAPI.RegDel(New RegPath(r.Hkey, r.Lpsubkey, r.Lpvaluename, r.Is64Reg))
                     Catch ex As Exception When Err.Number() <> ERROR_CODE.ERROR_FILE_NOT_FOUND Or Err.Number() <> ERROR_CODE.ERROR_PATH_NOT_FOUND
                         MsgBox("错误代码：" & Err.Number() & Chr(10) + "错误信息：" + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
                         Return Err.Number()
@@ -159,7 +188,7 @@ Namespace StatusOpera
                     End Try
                 Else
                     Try
-                        RegAPI.RegSetValue(New RegKey(r.hkey, r.lpsubkey, r.lpvaluename, r.is64reg, r.lpvaluetype, r.regvalue))
+                        RegAPI.RegSetValue(New RegKey(r.Hkey, r.Lpsubkey, r.Lpvaluename, r.Is64Reg, r.Lpvaluetype, r.Regvalue))
                     Catch ex As Exception
                         MsgBox("错误代码：" & Err.Number() & Chr(10) + "错误信息：" + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
                         Return Err.Number()
@@ -181,11 +210,16 @@ Namespace StatusOpera
     <Serializable()>
     Public Class Status
         Inherits RegStatus
-        Implements ICloneable
+        Implements ICloneable, ISerializable
 
         Private _tip As Label
         Private _ctrl As Button
-
+        ''' <summary>
+        ''' 无参数构造函数支持序列化
+        ''' </summary>
+        Public Sub New()
+            MyBase.New()
+        End Sub
         ''' <summary>
         ''' 
         ''' </summary>
@@ -223,14 +257,60 @@ Namespace StatusOpera
             _ctrl = ctrl
 
         End Sub
-
+        ''' <summary>
+        ''' 逆序列化构造函数
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Sub New(info As SerializationInfo, context As StreamingContext)
+            MyBase.New(info, context)
+            _state = info.GetBoolean("tip")
+            _regnum = info.GetInt32("ctrl")
+        End Sub
+        ''' <summary>
+        ''' 序列化接口实现方法
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
+            MyBase.GetObjectData(info, context)
+            info.AddValue("tip", _tip)
+            info.AddValue("ctrl", _ctrl)
+        End Sub
+        ''' <summary>
+        ''' 深复制操作对象的副本
+        ''' </summary>
+        ''' <returns>
+        ''' 返回一个Object类，包含该对象的全部成员
+        ''' </returns>
+        Public Overloads Function Clone() As Object Implements ICloneable.Clone
+            Return MemberwiseClone()
+        End Function
         ''' <summary>
         ''' 
         ''' </summary>
         Public Overloads Sub ChangeState()
 
-            MyBase.ChangeState()
-
+            Dim s As Integer = MyBase.ChangeState()
+            If s = ERROR_CODE.ERROR_SUCCESS Then
+                If _state Then
+                    _tip.ForeColor = Color.Green
+                    _tip.Text = "已启用"
+                    _ctrl.Text = "关闭"
+                Else
+                    _tip.ForeColor = Color.Red
+                    _tip.Text = "未启用"
+                    _ctrl.Text = "启用"
+                End If
+            End If
 
         End Sub
 
@@ -239,19 +319,20 @@ Namespace StatusOpera
         ''' </summary>
         Public Overloads Sub CheckState()
 
-            MyBase.CheckState()
-
+            Dim s As Integer = MyBase.CheckState()
+            If s = OFF_STATE Then
+                _tip.ForeColor = Color.Red
+                _tip.Text = "未启用"
+                _ctrl.Text = "启用"
+            ElseIf s = ON_STATE Then
+                _tip.ForeColor = Color.Green
+                _tip.Text = "已启用"
+                _ctrl.Text = "禁用"
+            End If
+            _ctrl.Enabled = True
         End Sub
 
-        ''' <summary>
-        ''' 
-        ''' </summary>
-        ''' <returns>
-        ''' 
-        ''' </returns>
-        Public Overloads Function Clone() As Object Implements ICloneable.Clone
-            Return MemberwiseClone()
-        End Function
+
 
     End Class
 

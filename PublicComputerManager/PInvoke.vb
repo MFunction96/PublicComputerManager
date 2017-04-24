@@ -3,7 +3,7 @@
 '功能：实现非托管代码的P/Invoke方法
 '**********************************************************
 
-Imports PublicComputerManager.RegOpera
+Imports PublicComputerManager.RegOpt
 
 Namespace PInvoke
     ''' <summary>
@@ -66,7 +66,7 @@ Namespace PInvoke
                                ByVal hKey As IntPtr,
                                ByVal lpValueName As String,
                                ByVal lpReserved As Integer,
-                               ByVal lpType As REG_TYPE,
+                               ByVal lpType As Integer,
                                ByRef lpData As UInteger,
                                ByVal lpcbData As Integer) _
                                As ERROR_CODE
@@ -77,7 +77,7 @@ Namespace PInvoke
                                ByVal hKey As IntPtr,
                                ByVal lpValueName As String,
                                ByVal lpReserved As Integer,
-                               ByVal lpType As REG_TYPE,
+                               ByVal lpType As Integer,
                                ByVal lpData As String,
                                ByVal lpcbData As Integer) _
                                As ERROR_CODE
@@ -88,7 +88,7 @@ Namespace PInvoke
                                ByVal hKey As IntPtr,
                                ByVal lpValueName As String,
                                ByVal lpReserved As IntPtr,
-                               ByRef lpType As REG_TYPE,
+                               ByRef lpType As Integer,
                                ByVal lpData As String,
                                ByRef lpcbData As Integer) _
                                As ERROR_CODE
@@ -99,7 +99,7 @@ Namespace PInvoke
                                ByVal hKey As IntPtr,
                                ByVal lpValueName As String,
                                ByVal lpReserved As IntPtr,
-                               ByRef lpType As REG_TYPE,
+                               ByRef lpType As Integer,
                                ByRef lpData As Integer,
                                ByRef lpcbData As Integer) _
                                As ERROR_CODE
@@ -160,38 +160,23 @@ Namespace PInvoke
                                As ERROR_CODE
         End Function
 
-        <DllImport("advapi32.dll", ExactSpelling:=False, SetLastError:=True, CharSet:=CharSet.Unicode)>
-        Friend Shared Function CreateProcessAsUser(
-                               ByVal hToken As IntPtr,
-                               ByVal lpApplicationName As String,
-                               ByVal lpCommandLine As String,
+        <DllImport("kernel32.dll", SetLastError:=True, CharSet:=CharSet.Unicode)>
+        Friend Shared Function CreateProcess(
+                               lpApplicationName As String,
+                               lpCommandLine As String,
                                ByRef lpProcessAttributes As SECURITY_ATTRIBUTES,
                                ByRef lpThreadAttributes As SECURITY_ATTRIBUTES,
-                               ByVal bInheritHandles As Boolean,
-                               ByVal dwCreationFlags As Integer,
-                               ByVal lpEnvironment As Object,
-                               ByVal lpCurrentDirectory As String,
+                               bInheritHandles As Boolean,
+                               dwCreationFlags As UInteger,
+                               lpEnvironment As IntPtr,
+                               lpCurrentDirectory As String,
                                ByRef lpStartupInfo As STARTUPINFO,
                                ByRef lpProcessInformation As PROCESS_INFORMATION) _
                                As Boolean
         End Function
 
-        <DllImport("userenv.dll", SetLastError:=True)>
-        Friend Shared Function CreateEnvironmentBlock(
-                               ByRef lpEnvironment As Object,
-                               ByVal hToken As IntPtr,
-                               ByVal bInherit As Boolean) _
-                               As Boolean
-        End Function
-
         <DllImport("coredll.dll", SetLastError:=True)>
         Friend Shared Function GetLastError() As Integer
-        End Function
-
-        <DllImport("userenv.dll", SetLastError:=True)>
-        Friend Shared Function DestroyEnvironmentBlock(
-                               ByVal lpEnvironment As Object) _
-                               As Boolean
         End Function
 
     End Class

@@ -5,11 +5,19 @@
 
 Imports PublicComputerManager.PInvoke
 
-Namespace RegOpera
-
+Namespace RegOpt
     ''' <summary>
-    ''' 注册表类型常量枚举
+    ''' 注册表主键常量枚举
     ''' </summary>
+    Public Enum REG_ROOT_KEY
+        HKEY_CLASSES_ROOT = &H80000000
+        HKEY_CURRENT_USER = &H80000001
+        HKEY_LOCAL_MACHINE = &H80000002
+        HKEY_USERS = &H80000003
+        HKEY_PERFORMANCE_DATA = &H80000004
+        HKEY_CURRENT_CONFIG = &H80000005
+        HKEY_DYN_DATA = &H80000006
+    End Enum
     Public Enum REG_TYPE
         REG_NONE = 0
         REG_SZ = 1
@@ -21,28 +29,27 @@ Namespace RegOpera
         REG_MULTI_SZ = 7
     End Enum
     ''' <summary>
-    ''' 注册表根键常量枚举
-    ''' </summary>
-    Public Enum REG_ROOT_KEY
-        HKEY_CLASSES_ROOT = &H80000000
-        HKEY_CURRENT_USER = &H80000001
-        HKEY_LOCAL_MACHINE = &H80000002
-        HKEY_USERS = &H80000003
-        HKEY_PERFORMANCE_DATA = &H80000004
-        HKEY_CURRENT_CONFIG = &H80000005
-        HKEY_DYN_DATA = &H80000006
-    End Enum
-    ''' <summary>
     ''' 注册表路径类
     ''' </summary>
-    <Serializable()>
+    <Serializable()> <Xml.Serialization.XmlRoot("RegPath")>
     Public Class RegPath
-        Implements ICloneable
+        Implements ICloneable, ISerializable
 
-        Private _hkey As REG_ROOT_KEY
+        <Xml.Serialization.XmlAttribute("hkey")>
+        Private _hKey As Integer
+        <Xml.Serialization.XmlAttribute("lpsubkey")>
         Private _lpsubkey As String
+        <Xml.Serialization.XmlAttribute("lpvaluename")>
         Private _lpvaluename As String
+        <Xml.Serialization.XmlAttribute("is64reg")>
         Private _is64reg As Boolean
+
+        ''' <summary>
+        ''' 无参数构造函数支持序列化
+        ''' </summary>
+        Public Sub New()
+
+        End Sub
         ''' <summary>
         ''' 复制构造函数
         ''' </summary>
@@ -52,13 +59,12 @@ Namespace RegOpera
         Public Sub New(
                    ByRef reg As RegPath)
 
-            _hkey = reg.hkey()
-            _lpsubkey = reg.lpsubkey()
-            _lpvaluename = reg.lpvaluename()
-            _is64reg = reg.is64reg()
+            _hKey = reg.Hkey()
+            _lpsubkey = reg.Lpsubkey
+            _lpvaluename = reg.Lpvaluename
+            _is64reg = reg.Is64Reg()
 
         End Sub
-
         ''' <summary>
         ''' 构造函数
         ''' </summary>
@@ -75,16 +81,46 @@ Namespace RegOpera
         ''' 注册表操作位宽
         ''' </param>
         Public Sub New(
-                   ByRef hKey As REG_ROOT_KEY,
+                   ByRef hKey As Integer,
                    ByVal lpSubKey As String,
                    Optional ByVal lpValueName As String = vbNullString,
                    Optional ByRef is64Reg As Boolean = False)
 
-            _hkey = hKey
+            _hKey = hKey
             _lpsubkey = lpSubKey
             _lpvaluename = lpValueName
             _is64reg = is64Reg
 
+        End Sub
+        ''' <summary>
+        ''' 逆序列化构造函数
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Sub New(info As SerializationInfo, context As StreamingContext)
+            _hKey = info.GetInt32("hkey")
+            _lpsubkey = info.GetString("lpsubkey")
+            _lpvaluename = info.GetString("lpvaluename")
+            _is64reg = info.GetBoolean("is64reg")
+        End Sub
+        ''' <summary>
+        ''' 序列化接口实现方法
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
+            info.AddValue("hkey", _hKey)
+            info.AddValue("lpsubkey", _lpsubkey)
+            info.AddValue("lpvaluename", _lpvaluename)
+            info.AddValue("is64reg", _is64reg)
         End Sub
         ''' <summary>
         ''' 深复制操作对象的副本
@@ -92,47 +128,53 @@ Namespace RegOpera
         ''' <returns>
         ''' 返回一个Object类，包含该对象的全部成员
         ''' </returns>
-        Public Function Clone() As Object Implements ICloneable.Clone
+        Public Overloads Function Clone() As Object Implements ICloneable.Clone
             Return MemberwiseClone()
         End Function
-
         ''' <summary>
-        ''' 获取操作对象的主键属性
+        ''' 获取注册表路径的主键属性
         ''' </summary>
         ''' <returns>
-        ''' 返回操作对象的主键属性
+        ''' 注册表路径的主键属性值
         ''' </returns>
-        Public Function hkey() As REG_ROOT_KEY
-            Return _hkey
-        End Function
+        Public ReadOnly Property Hkey As Integer
+            Get
+                Return _hKey
+            End Get
+        End Property
         ''' <summary>
-        ''' 获取操作对象的子键属性
+        ''' 获取注册表路径的子键属性
         ''' </summary>
         ''' <returns>
-        ''' 返回操作对象的子键属性
+        ''' 注册表路径的子键属性值
         ''' </returns>
-        Public Function lpsubkey() As String
-            Return _lpsubkey
-        End Function
+        Public ReadOnly Property Lpsubkey As String
+            Get
+                Return _lpsubkey
+            End Get
+        End Property
         ''' <summary>
-        ''' 获取操作对象的键名属性
+        ''' 获取注册表路径的键名属性
         ''' </summary>
         ''' <returns>
-        ''' 返回操作对象的键名属性
+        ''' 注册表路径的键名属性值
         ''' </returns>
-        Public Function lpvaluename() As String
-            Return _lpvaluename
-        End Function
+        Public ReadOnly Property Lpvaluename As String
+            Get
+                Return _lpvaluename
+            End Get
+        End Property
         ''' <summary>
-        ''' 获取操作对象的操作注册表位宽属性
+        ''' 获取注册表路径的键名属性
         ''' </summary>
         ''' <returns>
-        ''' 返回操作对象的操作注册表位宽属性
+        ''' 注册表路径的键名属性值
         ''' </returns>
-        Public Function is64reg() As Boolean
-            Return _is64reg
-        End Function
-
+        Public ReadOnly Property Is64Reg As Boolean
+            Get
+                Return _is64reg
+            End Get
+        End Property
     End Class
     ''' <summary>
     ''' 注册表键类
@@ -140,10 +182,16 @@ Namespace RegOpera
     <Serializable()>
     Public Class RegKey
         Inherits RegPath
-        Implements ICloneable
+        Implements ICloneable, ISerializable
 
-        Private _lpvaluetype As REG_TYPE
+        Private _lpvaluetype As Integer
         Private _regvalue As Object
+        ''' <summary>
+        ''' 无参数构造函数支持序列化
+        ''' </summary>
+        Public Sub New()
+            MyBase.New()
+        End Sub
         ''' <summary>
         ''' 复制构造函数
         ''' </summary>
@@ -153,9 +201,9 @@ Namespace RegOpera
         Public Sub New(
                    ByRef reg As RegKey)
 
-            MyBase.New(reg.hkey(), reg.lpsubkey(), reg.lpvaluename(), reg.is64reg())
-            _lpvaluetype = reg.lpvaluetype()
-            _regvalue = reg.regvalue()
+            MyBase.New(reg.Hkey, reg.Lpsubkey, reg.Lpvaluename, reg.Is64Reg())
+            _lpvaluetype = reg.Lpvaluetype()
+            _regvalue = reg.Regvalue()
 
         End Sub
         ''' <summary>
@@ -172,7 +220,7 @@ Namespace RegOpera
         ''' </param>
         Public Sub New(
                    ByRef reg As RegPath,
-                   Optional ByRef lpValueType As REG_TYPE = REG_TYPE.REG_NONE,
+                   Optional ByRef lpValueType As Integer = REG_TYPE.REG_NONE,
                    Optional ByVal regValue As Object = Nothing)
 
             MyBase.New(reg)
@@ -202,17 +250,45 @@ Namespace RegOpera
         ''' 构造注册表的键值
         ''' </param>
         Public Sub New(
-                   ByRef hKey As REG_ROOT_KEY,
+                   ByRef hKey As Integer,
                    ByVal lpSubKey As String,
                    Optional ByVal lpValueName As String = vbNullString,
                    Optional ByRef is64Reg As Boolean = False,
-                   Optional ByRef lpValueType As REG_TYPE = REG_TYPE.REG_NONE,
+                   Optional ByRef lpValueType As Integer = REG_TYPE.REG_NONE,
                    Optional ByVal regValue As Object = Nothing)
 
             MyBase.New(hKey, lpSubKey, lpValueName, is64Reg)
             _lpvaluetype = lpValueType
             _regvalue = regValue
 
+        End Sub
+        ''' <summary>
+        ''' 逆序列化构造函数
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Sub New(info As SerializationInfo, context As StreamingContext)
+            MyBase.New(info, context)
+            _lpvaluetype = info.GetInt32("lpvaluetype")
+            _regvalue = info.GetValue("regvalue", info.ObjectType)
+        End Sub
+        ''' <summary>
+        ''' 序列化接口实现方法
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
+            MyBase.GetObjectData(info, context)
+            info.AddValue("lpvaluetype", _lpvaluetype)
+            info.AddValue("regvalue", _regvalue)
         End Sub
         ''' <summary>
         ''' 深复制操作对象的副本
@@ -229,18 +305,22 @@ Namespace RegOpera
         ''' <returns>
         ''' 返回操作对象的键值类型属性
         ''' </returns>
-        Public Function lpvaluetype() As REG_TYPE
-            Return _lpvaluetype
-        End Function
+        Public ReadOnly Property Lpvaluetype As Integer
+            Get
+                Return _lpvaluetype
+            End Get
+        End Property
         ''' <summary>
         ''' 获取操作对象的键值属性
         ''' </summary>
         ''' <returns>
         ''' 返回操作对象的键值属性
         ''' </returns>
-        Public Function regvalue() As Object
-            Return _regvalue
-        End Function
+        Public ReadOnly Property Regvalue As Object
+            Get
+                Return _regvalue
+            End Get
+        End Property
 
     End Class
     ''' <summary>
@@ -249,9 +329,16 @@ Namespace RegOpera
     <Serializable()>
     Public Class RegStore
         Inherits RegKey
-        Implements ICloneable
+        Implements ICloneable, ISerializable
 
         Private _isnull As Boolean
+
+        ''' <summary>
+        ''' 无参数构造函数支持序列化
+        ''' </summary>
+        Public Sub New()
+            MyBase.New()
+        End Sub
         ''' <summary>
         ''' 复制构造函数
         ''' </summary>
@@ -261,8 +348,8 @@ Namespace RegOpera
         Public Sub New(
                    ByRef store As RegStore)
 
-            MyBase.New(store.hkey(), store.lpsubkey(), store.lpvaluename(), store.is64reg(), store.lpvaluetype(), store.regvalue())
-            _isnull = store.isnull()
+            MyBase.New(store.Hkey, store.Lpsubkey, store.Lpvaluename, store.Is64Reg(), store.Lpvaluetype(), store.Regvalue())
+            _isnull = store.Isnull()
 
         End Sub
         ''' <summary>
@@ -300,7 +387,7 @@ Namespace RegOpera
         Public Sub New(
                    ByRef isNull As Boolean,
                    ByRef reg As RegPath,
-                   ByRef lpValueType As REG_TYPE,
+                   ByRef lpValueType As Integer,
                    ByVal regValue As Object)
 
             MyBase.New(reg, lpValueType, regValue)
@@ -333,16 +420,42 @@ Namespace RegOpera
         ''' </param>
         Public Sub New(
                    ByRef isNull As Boolean,
-                   ByRef hKey As REG_ROOT_KEY,
+                   ByRef hKey As Integer,
                    ByVal lpSubKey As String,
                    ByVal lpValueName As String,
                    ByRef is64Reg As Boolean,
-                   ByRef lpValueType As REG_TYPE,
+                   ByRef lpValueType As Integer,
                    ByVal regValue As Object)
 
             MyBase.New(hKey, lpSubKey, lpValueName, is64Reg, lpValueType, regValue)
             _isnull = isNull
 
+        End Sub
+        ''' <summary>
+        ''' 逆序列化构造函数
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Sub New(info As SerializationInfo, context As StreamingContext)
+            MyBase.New(info, context)
+            _isnull = info.GetBoolean("isnull")
+        End Sub
+        ''' <summary>
+        ''' 序列化接口实现方法
+        ''' </summary>
+        ''' <param name="info">
+        ''' 要填充数据的序列化信息
+        ''' </param>
+        ''' <param name="context">
+        ''' 此序列化的目标
+        ''' </param>
+        Protected Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
+            MyBase.GetObjectData(info, context)
+            info.AddValue("isnull", _isnull)
         End Sub
         ''' <summary>
         ''' 深复制操作对象的副本
@@ -359,9 +472,11 @@ Namespace RegOpera
         ''' <returns>
         ''' 返回操作对象的可以为空属性
         ''' </returns>
-        Public Function isnull() As Boolean
-            Return _isnull
-        End Function
+        Public ReadOnly Property Isnull As Boolean
+            Get
+                Return _isnull
+            End Get
+        End Property
 
     End Class
     ''' <summary>
@@ -389,22 +504,22 @@ Namespace RegOpera
             Dim reggetvaluetemp As ERROR_CODE
             Dim phkresult As IntPtr
             Dim samdesired As KEY_ACCESS_TYPE
-            Dim lptype As REG_TYPE
+            Dim lptype As Integer
             Dim lpdatastr As String
             Dim lpdataint As Integer
             Dim lpcbdata As Integer
             Dim regtemp As RegKey
 
             If Environment.Is64BitOperatingSystem() = True Then
-                If reg.is64reg() = True Then
+                If reg.Is64Reg() = True Then
                     samdesired = KEY_ACCESS_TYPE.KEY_WOW64_64KEY
                 Else
                     samdesired = KEY_ACCESS_TYPE.KEY_WOW64_32KEY
                 End If
-                reggetvaluetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.hkey()), reg.lpsubkey(), 0, samdesired Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
+                reggetvaluetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, samdesired Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
             Else
                 samdesired = KEY_ACCESS_TYPE.KEY_ALL_ACCESS
-                reggetvaluetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.hkey()), reg.lpsubkey(), 0, samdesired, phkresult)
+                reggetvaluetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, samdesired, phkresult)
             End If
 
             If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
@@ -412,7 +527,7 @@ Namespace RegOpera
                 Return New RegKey(reg)
             End If
 
-            reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.lpvaluename(), IntPtr.op_Explicit(0), lptype, vbNullString, lpcbdata)
+            reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, IntPtr.op_Explicit(0), lptype, vbNullString, lpcbdata)
             If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                 NativeMethods.RegCloseKey(phkresult)
                 Err.Raise(reggetvaluetemp)
@@ -421,7 +536,7 @@ Namespace RegOpera
 
             If lptype = REG_TYPE.REG_SZ Or lptype = REG_TYPE.REG_EXPAND_SZ Or lptype = REG_TYPE.REG_MULTI_SZ Then
                 lpdatastr = StrDup(lpcbdata, Chr(0))
-                reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.lpvaluename(), IntPtr.op_Explicit(0), lptype, lpdatastr, lpcbdata)
+                reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, IntPtr.op_Explicit(0), lptype, lpdatastr, lpcbdata)
                 If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                     NativeMethods.RegCloseKey(phkresult)
                     Err.Raise(reggetvaluetemp)
@@ -433,7 +548,7 @@ Namespace RegOpera
                     regtemp = New RegKey(reg, lptype, lpdatastr)
                 End If
             Else
-                reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.lpvaluename(), IntPtr.op_Explicit(0), lptype, lpdataint, lpcbdata)
+                reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, IntPtr.op_Explicit(0), lptype, lpdataint, lpcbdata)
                 If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                     Err.Raise(reggetvaluetemp)
                     NativeMethods.RegCloseKey(phkresult)
@@ -463,15 +578,15 @@ Namespace RegOpera
             Dim regsetvaluetemp As ERROR_CODE
 
             If Environment.Is64BitOperatingSystem = True Then
-                If reg.is64reg() = True Then
+                If reg.Is64Reg() = True Then
                     samdesired = KEY_ACCESS_TYPE.KEY_WOW64_64KEY
                 Else
                     samdesired = KEY_ACCESS_TYPE.KEY_WOW64_32KEY
                 End If
-                regsetvaluetemp = NativeMethods.RegCreateKeyEx(IntPtr.op_Explicit(reg.hkey()), reg.lpsubkey(), 0, vbNullString, OPERATE_OPTION.REG_OPTION_NON_VOLATILE, samdesired Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, Nothing, phkresult, keyexist)
+                regsetvaluetemp = NativeMethods.RegCreateKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, vbNullString, OPERATE_OPTION.REG_OPTION_NON_VOLATILE, samdesired Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, Nothing, phkresult, keyexist)
             Else
                 samdesired = KEY_ACCESS_TYPE.KEY_ALL_ACCESS
-                regsetvaluetemp = NativeMethods.RegCreateKeyEx(IntPtr.op_Explicit(reg.hkey()), reg.lpsubkey(), 0, vbNullString, OPERATE_OPTION.REG_OPTION_NON_VOLATILE, samdesired, Nothing, phkresult, keyexist)
+                regsetvaluetemp = NativeMethods.RegCreateKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, vbNullString, OPERATE_OPTION.REG_OPTION_NON_VOLATILE, samdesired, Nothing, phkresult, keyexist)
             End If
 
             If regsetvaluetemp <> ERROR_CODE.ERROR_SUCCESS And keyexist <> REG_OPENED_EXISTING_KEY Then
@@ -479,11 +594,11 @@ Namespace RegOpera
                 Exit Sub
             End If
 
-            If reg.lpvaluetype() = REG_TYPE.REG_DWORD Then
-                regsetvaluetemp = NativeMethods.RegSetValueEx(phkresult, reg.lpvaluename(), 0, REG_TYPE.REG_DWORD, CUInt(reg.regvalue()), 4)
-            ElseIf reg.lpvaluetype() = REG_TYPE.REG_SZ Then
-                strvalue = CStr(reg.regvalue).Trim()
-                regsetvaluetemp = NativeMethods.RegSetValueEx(phkresult, reg.lpvaluename(), 0, REG_TYPE.REG_SZ, strvalue, Len(strvalue))
+            If reg.Lpvaluetype() = REG_TYPE.REG_DWORD Then
+                regsetvaluetemp = NativeMethods.RegSetValueEx(phkresult, reg.Lpvaluename, 0, REG_TYPE.REG_DWORD, CUInt(reg.Regvalue()), 4)
+            ElseIf reg.Lpvaluetype() = REG_TYPE.REG_SZ Then
+                strvalue = CStr(reg.Regvalue).Trim()
+                regsetvaluetemp = NativeMethods.RegSetValueEx(phkresult, reg.Lpvaluename, 0, REG_TYPE.REG_SZ, strvalue, Len(strvalue))
             End If
 
             If regsetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
@@ -503,23 +618,23 @@ Namespace RegOpera
             Dim phkresult As IntPtr
             Dim samdesired As Integer
 
-            If reg.lpvaluename() = vbNullString Then
-                regdeletetemp = NativeMethods.RegDeleteKey(IntPtr.op_Explicit(reg.hkey()), reg.lpsubkey())
+            If reg.Lpvaluename = vbNullString Then
+                regdeletetemp = NativeMethods.RegDeleteKey(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey)
                 If regdeletetemp <> ERROR_CODE.ERROR_SUCCESS Then
                     Err.Raise(regdeletetemp)
                     Return
                 End If
             Else
                 If Environment.Is64BitOperatingSystem = True Then
-                    If reg.is64reg() = True Then
+                    If reg.Is64Reg() = True Then
                         samdesired = KEY_ACCESS_TYPE.KEY_WOW64_64KEY
                     Else
                         samdesired = KEY_ACCESS_TYPE.KEY_WOW64_32KEY
                     End If
-                    regdeletetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.hkey()), reg.lpsubkey(), 0, samdesired Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
+                    regdeletetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, samdesired Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
                 Else
                     samdesired = KEY_ACCESS_TYPE.KEY_ALL_ACCESS
-                    regdeletetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.hkey()), reg.lpsubkey(), 0, samdesired, phkresult)
+                    regdeletetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, samdesired, phkresult)
                 End If
 
                 If regdeletetemp <> ERROR_CODE.ERROR_SUCCESS Then
@@ -527,7 +642,7 @@ Namespace RegOpera
                     Return
                 End If
 
-                regdeletetemp = NativeMethods.RegDeleteValue(phkresult, reg.lpvaluename())
+                regdeletetemp = NativeMethods.RegDeleteValue(phkresult, reg.Lpvaluename)
                 If regdeletetemp <> ERROR_CODE.ERROR_SUCCESS Then
                     Err.Raise(regdeletetemp)
                     NativeMethods.RegCloseKey(phkresult)

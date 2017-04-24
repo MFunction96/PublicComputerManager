@@ -448,7 +448,7 @@ Partial Class MainForm
         Me.MmcB.Name = "MmcB"
         Me.MmcB.Size = New System.Drawing.Size(84, 31)
         Me.MmcB.TabIndex = 8
-        Me.MmcB.Text = "检测中..."
+        Me.MmcB.Text = "暂不可用"
         Me.MmcB.UseVisualStyleBackColor = True
         '
         'MmcS
@@ -458,9 +458,9 @@ Partial Class MainForm
         Me.MmcS.ForeColor = System.Drawing.Color.DarkGray
         Me.MmcS.Location = New System.Drawing.Point(158, 44)
         Me.MmcS.Name = "MmcS"
-        Me.MmcS.Size = New System.Drawing.Size(82, 15)
+        Me.MmcS.Size = New System.Drawing.Size(71, 15)
         Me.MmcS.TabIndex = 16
-        Me.MmcS.Text = "检测中..."
+        Me.MmcS.Text = "暂不可用"
         '
         'MmcT
         '

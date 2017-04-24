@@ -56,6 +56,7 @@ Partial Class LoginForm
         '
         'Cancel
         '
+        Me.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.Cancel.Location = New System.Drawing.Point(246, 144)
         Me.Cancel.Name = "Cancel"
         Me.Cancel.Size = New System.Drawing.Size(145, 29)
@@ -65,8 +66,10 @@ Partial Class LoginForm
         '
         'LoginForm
         '
+        Me.AcceptButton = Me.Login
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.Cancel
         Me.ClientSize = New System.Drawing.Size(453, 215)
         Me.ControlBox = False
         Me.Controls.Add(Me.Cancel)
