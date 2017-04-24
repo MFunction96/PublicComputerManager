@@ -26,6 +26,9 @@ Public Class LoginForm
                 .RegistryB.Enabled = True
                 .Enabled = True
             End With
+            Hide()
+            Enabled = False
+            Dispose()
         Else
             MsgBox("密码错误！", CType(vbCritical + vbOKOnly, MsgBoxStyle), "错误")
             PwdT.Text = vbNullString

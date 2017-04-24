@@ -329,7 +329,6 @@ Namespace StatusOpt
                 _tip.Text = "已启用"
                 _ctrl.Text = "禁用"
             End If
-            _ctrl.Enabled = True
         End Sub
 
 

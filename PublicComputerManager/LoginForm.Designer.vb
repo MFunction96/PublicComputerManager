@@ -78,7 +78,7 @@ Partial Class LoginForm
         Me.Controls.Add(Me.PwdL)
         Me.Name = "LoginForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "LoginForm"
+        Me.Text = "管理员登录"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
