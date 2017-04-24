@@ -97,7 +97,7 @@ Namespace StatusOpt
         ''' <param name="context">
         ''' 此序列化的目标
         ''' </param>
-        Protected Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
+        Protected Overridable Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
             info.AddValue("state", _state)
             info.AddValue("regnum", _regnum)
         End Sub
@@ -127,12 +127,12 @@ Namespace StatusOpt
 
             For i = 0 To _regnum - 1 Step 1
                 Try
-                    regtemp = RegAPI.RegGetValue(New RegPath(_onreg(i).Hkey, _onreg(i).Lpsubkey, _onreg(i).Lpvaluename, _onreg(i).Is64Reg))
+                    regtemp = RegAPI.RegGetValue(New RegPath(_onreg(i).Hkey, _onreg(i).Lpsubkey, _onreg(i).Lpvaluename))
                 Catch ex As Exception When Not (Err.Number() = ERROR_CODE.ERROR_FILE_NOT_FOUND Or Err.Number() = ERROR_CODE.ERROR_PATH_NOT_FOUND And _onreg(i).Isnull())
                     MsgBox("错误代码：" & Err.Number() & Chr(10) + "错误信息：" + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
                     Return Err.Number()
                 Catch ex As Exception
-                    regtemp = New RegKey(New RegPath(_onreg(i).Hkey, _onreg(i).Lpsubkey, _onreg(i).Lpvaluename, _onreg(i).Is64Reg))
+                    regtemp = New RegKey(New RegPath(_onreg(i).Hkey, _onreg(i).Lpsubkey, _onreg(i).Lpvaluename))
                 End Try
 
                 If regtemp.Lpvaluetype = REG_TYPE.REG_SZ Then
@@ -179,7 +179,7 @@ Namespace StatusOpt
                 End If
                 If r.Isnull() Then
                     Try
-                        RegAPI.RegDel(New RegPath(r.Hkey, r.Lpsubkey, r.Lpvaluename, r.Is64Reg))
+                        RegAPI.RegDel(New RegPath(r.Hkey, r.Lpsubkey, r.Lpvaluename))
                     Catch ex As Exception When Err.Number() <> ERROR_CODE.ERROR_FILE_NOT_FOUND Or Err.Number() <> ERROR_CODE.ERROR_PATH_NOT_FOUND
                         MsgBox("错误代码：" & Err.Number() & Chr(10) + "错误信息：" + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
                         Return Err.Number()
@@ -188,7 +188,7 @@ Namespace StatusOpt
                     End Try
                 Else
                     Try
-                        RegAPI.RegSetValue(New RegKey(r.Hkey, r.Lpsubkey, r.Lpvaluename, r.Is64Reg, r.Lpvaluetype, r.Regvalue))
+                        RegAPI.RegSetValue(New RegKey(r.Hkey, r.Lpsubkey, r.Lpvaluename, r.Lpvaluetype, r.Regvalue))
                     Catch ex As Exception
                         MsgBox("错误代码：" & Err.Number() & Chr(10) + "错误信息：" + ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
                         Return Err.Number()
@@ -280,7 +280,7 @@ Namespace StatusOpt
         ''' <param name="context">
         ''' 此序列化的目标
         ''' </param>
-        Protected Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
+        Protected Overridable Overloads Sub GetObjectData(info As SerializationInfo, context As StreamingContext) Implements ISerializable.GetObjectData
             MyBase.GetObjectData(info, context)
             info.AddValue("tip", _tip)
             info.AddValue("ctrl", _ctrl)

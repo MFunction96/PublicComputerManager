@@ -26,31 +26,31 @@ Public Class MainForm
         Dim n As Integer
         n = 1
         ReDim onreg(n - 1), offreg(n - 1)
-        regp = New RegPath(REG_ROOT_KEY.HKEY_LOCAL_MACHINE, "Software\Policies\Microsoft\Windows\safer\codeidentifiers", "DefaultLevel", True)
+        regp = New RegPath(REG_ROOT_KEY.HKEY_LOCAL_MACHINE, "Software\Policies\Microsoft\Windows\safer\codeidentifiers", "DefaultLevel")
         onreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H40000)
         offreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
         limproc = New Status(LimProcS, LimProcB, New RegStatus(n, onreg, offreg))
         n = 1
         ReDim onreg(n - 1), offreg(n - 1)
-        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoDrives", True)
+        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoDrives")
         onreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H4)
         offreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
         limitdisk = New Status(LimitDiskS, LimitDiskB, New RegStatus(n, onreg, offreg))
         n = 1
         ReDim onreg(n - 1), offreg(n - 1)
-        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableRegistryTools", True)
+        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableRegistryTools")
         offreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H2)
         onreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
         registry = New Status(RegistryS, RegistryB, New RegStatus(n, onreg, offreg))
         n = 1
         ReDim onreg(n - 1), offreg(n - 1)
-        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Policies\Microsoft\Windows\System", "DisableCMD", True)
+        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Policies\Microsoft\Windows\System", "DisableCMD")
         offreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H1)
         onreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
         cmd = New Status(CmdS, CmdB, New RegStatus(n, onreg, offreg))
         n = 1
         ReDim onreg(n), offreg(n)
-        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableTaskMgr", True)
+        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableTaskMgr")
         XMLControl.SerialObject(regp, "Config.xml")
         onreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
         offreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H1)
@@ -58,14 +58,14 @@ Public Class MainForm
 
         n = 1
         ReDim onreg(n - 1), offreg(n - 1)
-        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoRun", True)
+        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoRun")
         onreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
         offreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H1)
         launcher = New Status(LauncherS, LauncherB, New RegStatus(n, onreg, offreg))
 
         n = 1
         ReDim onreg(n - 1), offreg(n - 1)
-        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoControlPanel", True)
+        regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoControlPanel")
         onreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
         offreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H1)
         ctrlpal = New Status(CtrlPalS, CtrlPalB, New RegStatus(n, onreg, offreg))
