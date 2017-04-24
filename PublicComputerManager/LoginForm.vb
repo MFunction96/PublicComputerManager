@@ -8,8 +8,8 @@ Imports PublicComputerManager.RegOpt
 Public Class LoginForm
 
     Private Sub Login_Click(sender As Object, e As EventArgs) Handles Login.Click
-        RegAPI.RegSetValue(New RegKey(RegPath.HKEY_CURRENT_USER, "Software\PublicComputerManager", "Passwd",, RegKey.REG_SZ, "123456"))
-        Dim rk As RegKey = RegAPI.RegGetValue(New RegPath(RegPath.HKEY_CURRENT_USER, "Software\PublicComputerManager", "Passwd"))
+        RegAPI.RegSetValue(New RegKey(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\PublicComputerManager", "Passwd",, REG_TYPE.REG_SZ, "123456"))
+        Dim rk As RegKey = RegAPI.RegGetValue(New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\PublicComputerManager", "Passwd"))
         If rk.Regvalue.ToString() = PwdT.Text Then
             With MainForm
                 .AccAdmin.Enabled = False

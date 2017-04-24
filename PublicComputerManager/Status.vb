@@ -135,20 +135,20 @@ Namespace StatusOpt
                     regtemp = New RegKey(New RegPath(_onreg(i).Hkey, _onreg(i).Lpsubkey, _onreg(i).Lpvaluename, _onreg(i).Is64Reg))
                 End Try
 
-                If regtemp.Lpvaluetype = RegKey.REG_SZ Then
+                If regtemp.Lpvaluetype = REG_TYPE.REG_SZ Then
                     strresult = CStr(regtemp.Regvalue)
                     If strresult <> CStr(_onreg(i).Regvalue) Then
                         _state = False
                         Return OFF_STATE
                     End If
-                ElseIf regtemp.Lpvaluetype = RegKey.REG_DWORD Then
+                ElseIf regtemp.Lpvaluetype = REG_TYPE.REG_DWORD Then
                     intresult = CInt(regtemp.Regvalue)
                     If intresult <> CInt(_onreg(i).Regvalue) Then
                         _state = False
                         Return OFF_STATE
                     End If
                 Else
-                    If regtemp.Lpvaluetype <> RegKey.REG_NONE Or _onreg(i).Isnull <> True Then
+                    If regtemp.Lpvaluetype <> REG_TYPE.REG_NONE Or _onreg(i).Isnull <> True Then
                         _state = False
                         Return OFF_STATE
                     End If
