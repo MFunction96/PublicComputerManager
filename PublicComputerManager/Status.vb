@@ -66,7 +66,6 @@ Namespace StatusOpt
 
             Dim i As Integer
 
-            _state = False
             _regnum = regNum
             ReDim _onreg(regNum - 1), _offreg(regNum - 1)
             For i = 0 To regNum - 1 Step 1
@@ -155,6 +154,7 @@ Namespace StatusOpt
                 End If
             Next
 
+            _state = True
             Return ON_STATE
 
         End Function
@@ -304,7 +304,7 @@ Namespace StatusOpt
                 If _state Then
                     _tip.ForeColor = Color.Green
                     _tip.Text = "已启用"
-                    _ctrl.Text = "关闭"
+                    _ctrl.Text = "禁用"
                 Else
                     _tip.ForeColor = Color.Red
                     _tip.Text = "未启用"
