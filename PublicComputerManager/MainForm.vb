@@ -51,7 +51,6 @@ Public Class MainForm
         n = 1
         ReDim onreg(n), offreg(n)
         regp = New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\Microsoft\Windows\CurrentVersion\Policies\System", "DisableTaskMgr")
-        XMLControl.SerialObject(regp, "Config.xml")
         onreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
         offreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H1)
         taskmgr = New Status(TaskmgrS, TaskmgrB, New RegStatus(n, onreg, offreg))
