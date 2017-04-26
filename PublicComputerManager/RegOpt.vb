@@ -2,7 +2,6 @@
 '名称：注册表访问相关API封装
 '功能：注册表信息的创建、赋值、读取、删除
 '**********************************************************
-
 Imports PublicComputerManager.PInvoke
 
 Namespace RegOpt
@@ -31,15 +30,12 @@ Namespace RegOpt
     ''' <summary>
     ''' 注册表路径类
     ''' </summary>
-    <Serializable()> <Xml.Serialization.XmlRoot("RegPath")>
+    <Serializable()>
     Public Class RegPath
         Implements ICloneable, ISerializable
 
-        <Xml.Serialization.XmlAttribute("hkey")>
         Private _hKey As Integer
-        <Xml.Serialization.XmlAttribute("lpsubkey")>
         Private _lpsubkey As String
-        <Xml.Serialization.XmlAttribute("lpvaluename")>
         Private _lpvaluename As String
         ''' <summary>
         ''' 无参数构造函数支持序列化
