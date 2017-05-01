@@ -2,7 +2,9 @@
 '名称：注册表访问相关API封装
 '功能：注册表信息的创建、赋值、读取、删除
 '**********************************************************
+
 Imports PublicComputerManager.PInvoke
+Imports System.Runtime.Serialization
 
 Namespace RegOpt
     ''' <summary>

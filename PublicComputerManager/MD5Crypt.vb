@@ -2,6 +2,10 @@
 '名称：MD5加密类
 '功能：用于数据加密
 '**********************************************************
+Imports System.Web
+Imports System.IO
+Imports System.Security.Cryptography
+Imports System.Text
 ''' <summary>
 ''' MD5加密类
 ''' </summary>

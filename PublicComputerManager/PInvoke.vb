@@ -3,7 +3,7 @@
 '功能：实现非托管代码的P/Invoke方法
 '**********************************************************
 
-Imports PublicComputerManager.RegOpt
+Imports System.Runtime.InteropServices
 
 Namespace PInvoke
     ''' <summary>

@@ -5,6 +5,7 @@
 
 Imports PublicComputerManager.RegOpt
 Imports PublicComputerManager.PInvoke
+Imports System.Runtime.Serialization
 
 Namespace StatusOpt
 

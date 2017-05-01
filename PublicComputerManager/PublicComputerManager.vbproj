@@ -109,18 +109,7 @@
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
-    <Import Include="System.IO" />
-    <Import Include="System.Runtime.InteropServices" />
-    <Import Include="System.Runtime.Serialization" />
-    <Import Include="System.Runtime.Serialization.Formatters" />
-    <Import Include="System.Runtime.Serialization.Formatters.Binary" />
-    <Import Include="System.Security.Cryptography" />
-    <Import Include="System.Text" />
-    <Import Include="System.Web" />
     <Import Include="System.Windows.Forms" />
-    <Import Include="System.Linq" />
-    <Import Include="System.Xml.Linq" />
-    <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrtProc.vb" />
