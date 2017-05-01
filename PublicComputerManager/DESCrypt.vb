@@ -9,22 +9,9 @@ Imports System.Text
 ''' <summary>
 ''' MD5加密类
 ''' </summary>
-Public Class MD5Crypt
-
+Public Class DESCrypt
     ''' <summary>
-    ''' 默认密码加密
-    ''' </summary>
-    ''' <param name="Text">
-    ''' 需要加密的文本
-    ''' </param>
-    ''' <returns>
-    ''' 加密后文本
-    ''' </returns>
-    Public Function Encrypt(ByVal Text As String) As String
-        Return Encrypt(Text, "MFunction")
-    End Function
-    ''' <summary>
-    ''' 自定义密码加密
+    ''' 自定义密码加密，默认密码为MFunction
     ''' </summary>
     ''' <param name="Text">
     ''' 需要加密的文本
@@ -35,7 +22,10 @@ Public Class MD5Crypt
     ''' <returns>
     ''' 加密后文本
     ''' </returns>
-    Public Function Encrypt(ByVal Text As String, ByVal sKey As String) As String
+    Public Shared Function Encrypt(ByVal Text As String, Optional ByVal sKey As String = "MFunction") As String
+        If sKey = vbNullString Then
+            sKey = "MFunction"
+        End If
         Dim des As New DESCryptoServiceProvider()
         Dim inputByteArray As Byte()
         inputByteArray = Encoding.Default.GetBytes(Text)
@@ -53,19 +43,7 @@ Public Class MD5Crypt
         Return ret.ToString()
     End Function
     ''' <summary>
-    ''' 默认密码解密
-    ''' </summary>
-    ''' <param name="Text">
-    ''' 需要解密的文本
-    ''' </param>
-    ''' <returns>
-    ''' 解密后的文本
-    ''' </returns>
-    Public Function Decrypt(ByVal Text As String) As String
-        Return Decrypt(Text, "MFunction")
-    End Function
-    ''' <summary>
-    ''' 自定义密码解密
+    ''' 自定义密码解密，默认密码为MFunction
     ''' </summary>
     ''' <param name="Text">
     ''' 需要解密的文本
@@ -76,7 +54,10 @@ Public Class MD5Crypt
     ''' <returns>
     ''' 解密后的文本
     ''' </returns>
-    Public Function Decrypt(ByVal Text As String, ByVal sKey As String) As String
+    Public Shared Function Decrypt(ByVal Text As String, Optional ByVal sKey As String = "MFunction") As String
+        If sKey = vbNullString Then
+            sKey = "MFunction"
+        End If
         Dim des As New DESCryptoServiceProvider()
         Dim len As Integer
         len = CInt(Text.Length / 2)

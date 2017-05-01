@@ -39,11 +39,14 @@ Namespace RegOpt
         Private _hKey As Integer
         Private _lpsubkey As String
         Private _lpvaluename As String
+        Private _descrption As String = "a"
+        Private _guid As String = "a"
+        Private _nickname As String = "a"
         ''' <summary>
         ''' 无参数构造函数支持序列化
         ''' </summary>
         Public Sub New()
-
+            _guid = GenerateGUID.Generate()
         End Sub
         ''' <summary>
         ''' 复制构造函数
@@ -53,11 +56,10 @@ Namespace RegOpt
         ''' </param>
         Public Sub New(
                    ByRef reg As RegPath)
-
             _hKey = reg.Hkey
             _lpsubkey = reg.Lpsubkey
             _lpvaluename = reg.Lpvaluename
-
+            _guid = reg.Guid
         End Sub
         ''' <summary>
         ''' 构造函数
@@ -75,11 +77,47 @@ Namespace RegOpt
                    ByRef hKey As Integer,
                    ByVal lpSubKey As String,
                    Optional ByVal lpValueName As String = vbNullString)
-
             _hKey = hKey
             _lpsubkey = lpSubKey
             _lpvaluename = lpValueName
+            _guid = GenerateGUID.Generate()
+        End Sub
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <param name="xmlFile"></param>
+        Public Sub New(xmlFile As String)
+            Try
+                If My.Computer.FileSystem.FileExists(xmlFile) Then
+                    Dim doc As New Xml.XmlDocument
+                    doc.Load(xmlFile)
+                    Dim re As Xml.XmlNodeReader = New Xml.XmlNodeReader(doc)
+                    Dim tmpStr As String = vbNullString
+                    Dim name As String
 
+                    While re.Read
+                        Select Case re.NodeType
+                            Case Xml.XmlNodeType.Element
+                                name = re.Name
+                            Case Xml.XmlNodeType.Text
+                                If name.Equals("DataSource") Then
+                                    tmpStr = tmpStr & "Data Source=" & re.Value
+                                End If
+                                If name.Equals("InitialCatalog") Then
+                                    tmpStr = tmpStr & ";Initial Catalog=" & re.Value
+                                End If
+                                If name.Equals("UserID") Then
+                                    tmpStr = tmpStr & ";User ID=" & re.Value
+                                End If
+                                If name.Equals("Password") Then
+                                    tmpStr = tmpStr & ";Password=" & re.Value
+                                End If
+                        End Select
+                    End While
+                End If
+            Catch ex As Exception
+                MsgBox(ex.Message & vbCrLf & ex.StackTrace)
+            End Try
         End Sub
         ''' <summary>
         ''' 逆序列化构造函数
@@ -110,6 +148,20 @@ Namespace RegOpt
             info.AddValue("lpvaluename", _lpvaluename)
         End Sub
         ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <param name="writer"></param>
+        ''' <param name="skey"></param>
+        Protected Overridable Sub MidExport(writer As Xml.XmlTextWriter, Optional skey As String = "MFunction")
+            writer.WriteStartElement("RegPath", Guid)
+            writer.WriteAttributeString("name", DESCrypt.Encrypt(_nickname.ToString(), skey))
+            writer.WriteAttributeString("descrption", DESCrypt.Encrypt(_descrption.ToString(), skey))
+            writer.WriteAttributeString("hkey", DESCrypt.Encrypt(_hKey.ToString(), skey))
+            writer.WriteAttributeString("lpsubkey", DESCrypt.Encrypt(_lpsubkey.ToString(), skey))
+            writer.WriteAttributeString("lpvaluename", DESCrypt.Encrypt(_lpvaluename.ToString(), skey))
+            writer.WriteEndElement()
+        End Sub
+        ''' <summary>
         ''' 深复制操作对象的副本
         ''' </summary>
         ''' <returns>
@@ -117,6 +169,29 @@ Namespace RegOpt
         ''' </returns>
         Public Overloads Function Clone() As Object Implements ICloneable.Clone
             Return MemberwiseClone()
+        End Function
+        ''' <summary>
+        ''' 不推荐重载此方法，推荐重载派生类MidExport方法
+        ''' </summary>
+        ''' <param name="xmlFile"></param>
+        ''' <param name="skey"></param>
+        ''' <returns></returns>
+        Public Function ExportXml(xmlFile As String, Optional skey As String = "MFunction") As Boolean
+            Try
+                Dim writer As New Xml.XmlTextWriter(xmlFile, Text.Encoding.GetEncoding("utf-8"))
+                writer.Formatting = Xml.Formatting.Indented
+                If My.Computer.FileSystem.FileExists(xmlFile) = False Then
+                    writer.WriteStartDocument()
+                End If
+                writer.WriteStartElement("Registry")
+                MidExport(writer, skey)
+                writer.WriteFullEndElement()
+                writer.Close()
+            Catch ex As Exception
+                MsgBox(ex.Message & vbCrLf & ex.StackTrace)
+                Return False
+            End Try
+            Return True
         End Function
         ''' <summary>
         ''' 获取注册表路径的主键属性
@@ -149,6 +224,25 @@ Namespace RegOpt
         Public ReadOnly Property Lpvaluename As String
             Get
                 Return _lpvaluename
+            End Get
+        End Property
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <returns></returns>
+        Public ReadOnly Property Descrption As String
+            Get
+                Return _descrption
+            End Get
+        End Property
+        Public ReadOnly Property Guid As String
+            Get
+                Return _guid
+            End Get
+        End Property
+        Public ReadOnly Property Nickname As String
+            Get
+                Return _nickname
             End Get
         End Property
     End Class

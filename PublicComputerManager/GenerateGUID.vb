@@ -15,9 +15,7 @@ Public Class GenerateGUID
     ''' <returns>
     ''' 返回GUID字符串
     ''' </returns>
-    Public Shared Function Generate(
-                           ByVal isReg As Boolean) _
-                           As String
+    Public Shared Function Generate(Optional isReg As Boolean = False) As String
 
         Dim sguid As String
 
