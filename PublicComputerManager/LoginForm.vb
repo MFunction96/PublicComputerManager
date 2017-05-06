@@ -8,8 +8,17 @@ Imports PublicComputerManager.RegOpt
 Public Class LoginForm
 
     Private Sub Login_Click(sender As Object, e As EventArgs) Handles Login.Click
-        Dim rk As RegKey = RegAPI.RegGetValue(New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\PublicComputerManager", "Passwd"))
-        If rk.Regvalue.ToString() = PwdT.Text Then
+        Dim rk As RegKey
+        Try
+            rk = RegAPI.RegGetValue(New RegPath(REG_ROOT_KEY.HKEY_CURRENT_USER, "Software\PublicComputerManager", "Passwd"))
+            If rk.Regvalue.ToString() = vbNullString Then
+                Throw New Exception("程序错误！")
+            End If
+        Catch ex As Exception
+            MsgBox(ex.Message, CType(vbOKOnly + vbCritical, MsgBoxStyle), "错误")
+            Exit Sub
+        End Try
+        If rk.Regvalue.ToString() = DESCrypt.Encrypt(PwdT.Text) Then
             With MainForm
                 .AccAdmin.Enabled = False
                 '.MmcB.Enabled = True
@@ -28,7 +37,7 @@ Public Class LoginForm
             End With
             Hide()
             Enabled = False
-            Dispose()
+            Close()
         Else
             MsgBox("密码错误！", CType(vbCritical + vbOKOnly, MsgBoxStyle), "错误")
             PwdT.Text = vbNullString
@@ -37,7 +46,10 @@ Public Class LoginForm
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         MainForm.Enabled = True
-        Dispose()
+        Hide()
     End Sub
 
+    Private Sub LoginForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    End Sub
 End Class

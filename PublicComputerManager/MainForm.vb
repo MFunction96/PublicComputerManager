@@ -27,8 +27,8 @@ Public Class MainForm
         n = 1
         ReDim onreg(n - 1), offreg(n - 1)
         regp = New RegPath(REG_ROOT_KEY.HKEY_LOCAL_MACHINE, "Software\Policies\Microsoft\Windows\safer\codeidentifiers", "DefaultLevel")
-        onreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H40000)
-        offreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H0)
+        onreg(0) = New RegStore(False, regp, REG_TYPE.REG_DWORD, &H0)
+        offreg(0) = New RegStore(True, regp, REG_TYPE.REG_DWORD, &H40000)
         limproc = New Status(LimProcS, LimProcB, New RegStatus(n, onreg, offreg))
         n = 1
         ReDim onreg(n - 1), offreg(n - 1)

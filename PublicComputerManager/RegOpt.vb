@@ -178,8 +178,9 @@ Namespace RegOpt
         ''' <returns></returns>
         Public Function ExportXml(xmlFile As String, Optional skey As String = "MFunction") As Boolean
             Try
-                Dim writer As New Xml.XmlTextWriter(xmlFile, Text.Encoding.GetEncoding("utf-8"))
-                writer.Formatting = Xml.Formatting.Indented
+                Dim writer As New Xml.XmlTextWriter(xmlFile, Text.Encoding.GetEncoding("utf-8")) With {
+                    .Formatting = Xml.Formatting.Indented
+                }
                 If My.Computer.FileSystem.FileExists(xmlFile) = False Then
                     writer.WriteStartDocument()
                 End If
