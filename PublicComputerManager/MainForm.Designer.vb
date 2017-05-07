@@ -514,7 +514,7 @@ Partial Class MainForm
         Me.MaximizeBox = False
         Me.Name = "MainForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "校园管理平台"
+        Me.Text = "PublicComputerManager"
         Me.AdminGroup.ResumeLayout(False)
         Me.Tools.ResumeLayout(False)
         Me.AccessLimit.ResumeLayout(False)
