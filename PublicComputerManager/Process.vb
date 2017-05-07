@@ -2,26 +2,7 @@
 ''' 
 ''' </summary>
 Public Class Process
-    Private Structure STARTUPINFO
-        Dim cb As Integer
-        Dim lpReserved As String
-        Dim lpDesktop As String
-        Dim lpTitle As String
-        Dim dwX As Integer
-        Dim dwY As Integer
-        Dim dwXSize As Integer
-        Dim dwYSize As Integer
-        Dim dwXCountChars As Integer
-        Dim dwYCountChars As Integer
-        Dim dwFillAttribute As Integer
-        Dim dwFlags As Integer
-        Dim wShowWindow As Short
-        Dim cbReserved2 As Short
-        Dim lpReserved2 As Integer
-        Dim hStdInput As Integer
-        Dim hStdOutput As Integer
-        Dim hStdError As Integer
-    End Structure
+    
     ''' <summary>
     ''' 
     ''' </summary>
@@ -38,7 +19,7 @@ Public Class Process
     ''' <param name="app"></param>
     ''' <param name="args"></param>
     Public Shared Sub Createproc(app As String, args As String)
-        Dim si As STARTUPINFO
+        Dim si As PInvoke.NativeMethods.STARTUPINFO
         si.cb = 0
         si.lpReserved = vbNullString
         si.lpDesktop = vbNullString
@@ -54,9 +35,9 @@ Public Class Process
         si.wShowWindow = 0
         si.cbReserved2 = 0
         si.lpReserved2 = 0
-        si.hStdInput = 0
-        si.hStdOutput = 0
-        si.hStdError = 0
+        si.hStdInput = New IntPtr(0)
+        si.hStdOutput = New IntPtr(0)
+        si.hStdError = New IntPtr(0)
 
     End Sub
 End Class

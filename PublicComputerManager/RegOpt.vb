@@ -573,9 +573,9 @@ Namespace RegOpt
             Dim regtemp As RegKey
 
             If Environment.Is64BitOperatingSystem() = True Then
-                reggetvaluetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, KEY_ACCESS_TYPE.KEY_WOW64_64KEY Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
+                reggetvaluetemp = NativeMethods.RegOpenKeyEx(New IntPtr(reg.Hkey), reg.Lpsubkey, 0, KEY_ACCESS_TYPE.KEY_WOW64_64KEY Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
             Else
-                reggetvaluetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
+                reggetvaluetemp = NativeMethods.RegOpenKeyEx(New IntPtr(reg.Hkey), reg.Lpsubkey, 0, KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
             End If
 
             If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
@@ -583,7 +583,7 @@ Namespace RegOpt
                 Return New RegKey(reg)
             End If
 
-            reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, IntPtr.op_Explicit(0), lptype, vbNullString, lpcbdata)
+            reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, New IntPtr(0), lptype, vbNullString, lpcbdata)
             If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                 NativeMethods.RegCloseKey(phkresult)
                 Err.Raise(reggetvaluetemp)
@@ -592,7 +592,7 @@ Namespace RegOpt
 
             If lptype = REG_TYPE.REG_SZ Or lptype = REG_TYPE.REG_EXPAND_SZ Or lptype = REG_TYPE.REG_MULTI_SZ Then
                 lpdatastr = StrDup(lpcbdata, Chr(0))
-                reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, IntPtr.op_Explicit(0), lptype, lpdatastr, lpcbdata)
+                reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, New IntPtr(0), lptype, lpdatastr, lpcbdata)
                 If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                     NativeMethods.RegCloseKey(phkresult)
                     Err.Raise(reggetvaluetemp)
@@ -604,7 +604,7 @@ Namespace RegOpt
                     regtemp = New RegKey(reg, lptype, lpdatastr)
                 End If
             Else
-                reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, IntPtr.op_Explicit(0), lptype, lpdataint, lpcbdata)
+                reggetvaluetemp = NativeMethods.RegQueryValueEx(phkresult, reg.Lpvaluename, New IntPtr(0), lptype, lpdataint, lpcbdata)
                 If reggetvaluetemp <> ERROR_CODE.ERROR_SUCCESS Then
                     Err.Raise(reggetvaluetemp)
                     NativeMethods.RegCloseKey(phkresult)
@@ -633,9 +633,9 @@ Namespace RegOpt
             Dim regsetvaluetemp As Integer
 
             If Environment.Is64BitOperatingSystem = True Then
-                regsetvaluetemp = NativeMethods.RegCreateKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, vbNullString, OPERATE_OPTION.REG_OPTION_NON_VOLATILE, KEY_ACCESS_TYPE.KEY_WOW64_64KEY Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, Nothing, phkresult, keyexist)
+                regsetvaluetemp = NativeMethods.RegCreateKeyEx(New IntPtr(reg.Hkey), reg.Lpsubkey, 0, vbNullString, OPERATE_OPTION.REG_OPTION_NON_VOLATILE, KEY_ACCESS_TYPE.KEY_WOW64_64KEY Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, Nothing, phkresult, keyexist)
             Else
-                regsetvaluetemp = NativeMethods.RegCreateKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, vbNullString, OPERATE_OPTION.REG_OPTION_NON_VOLATILE, KEY_ACCESS_TYPE.KEY_ALL_ACCESS, Nothing, phkresult, keyexist)
+                regsetvaluetemp = NativeMethods.RegCreateKeyEx(New IntPtr(reg.Hkey), reg.Lpsubkey, 0, vbNullString, OPERATE_OPTION.REG_OPTION_NON_VOLATILE, KEY_ACCESS_TYPE.KEY_ALL_ACCESS, Nothing, phkresult, keyexist)
             End If
 
             If regsetvaluetemp <> ERROR_CODE.ERROR_SUCCESS And keyexist <> REG_OPENED_EXISTING_KEY Then
@@ -667,16 +667,16 @@ Namespace RegOpt
             Dim phkresult As IntPtr
 
             If reg.Lpvaluename = vbNullString Then
-                regdeletetemp = NativeMethods.RegDeleteKey(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey)
+                regdeletetemp = NativeMethods.RegDeleteKey(New IntPtr(reg.Hkey), reg.Lpsubkey)
                 If regdeletetemp <> ERROR_CODE.ERROR_SUCCESS Then
                     Err.Raise(regdeletetemp)
                     Return
                 End If
             Else
                 If Environment.Is64BitOperatingSystem = True Then
-                    regdeletetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, KEY_ACCESS_TYPE.KEY_WOW64_64KEY Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
+                    regdeletetemp = NativeMethods.RegOpenKeyEx(New IntPtr(reg.Hkey), reg.Lpsubkey, 0, KEY_ACCESS_TYPE.KEY_WOW64_64KEY Or KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
                 Else
-                    regdeletetemp = NativeMethods.RegOpenKeyEx(IntPtr.op_Explicit(reg.Hkey), reg.Lpsubkey, 0, KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
+                    regdeletetemp = NativeMethods.RegOpenKeyEx(New IntPtr(reg.Hkey), reg.Lpsubkey, 0, KEY_ACCESS_TYPE.KEY_ALL_ACCESS, phkresult)
                 End If
 
                 If regdeletetemp <> ERROR_CODE.ERROR_SUCCESS Then
