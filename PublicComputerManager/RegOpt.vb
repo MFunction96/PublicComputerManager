@@ -36,12 +36,12 @@ Namespace RegOpt
     Public Class RegPath
         Implements ICloneable, ISerializable
 
-        Private _hKey As Integer
-        Private _lpsubkey As String
-        Private _lpvaluename As String
-        Private _descrption As String = "a"
-        Private _guid As String = "a"
-        Private _nickname As String = "a"
+        Private ReadOnly _hKey As Integer
+        Private ReadOnly _lpsubkey As String
+        Private ReadOnly _lpvaluename As String
+        Private ReadOnly _descrption As String
+        Private ReadOnly _guid As String
+        Private ReadOnly _nickname As String
         ''' <summary>
         ''' 无参数构造函数支持序列化
         ''' </summary>
@@ -60,6 +60,8 @@ Namespace RegOpt
             _lpsubkey = reg.Lpsubkey
             _lpvaluename = reg.Lpvaluename
             _guid = reg.Guid
+            _nickname = reg._nickname
+            _descrption = reg._descrption
         End Sub
         ''' <summary>
         ''' 构造函数
@@ -74,50 +76,15 @@ Namespace RegOpt
         ''' 注册表键名
         ''' </param>
         Public Sub New(
-                   ByRef hKey As Integer,
-                   ByVal lpSubKey As String,
-                   Optional ByVal lpValueName As String = vbNullString)
+                   hKey As Integer,
+                   lpSubKey As String,
+                   Optional lpValueName As String = vbNullString,
+                   Optional nickName As String = vbNullString)
             _hKey = hKey
             _lpsubkey = lpSubKey
             _lpvaluename = lpValueName
             _guid = GenerateGUID.Generate()
-        End Sub
-        ''' <summary>
-        ''' 
-        ''' </summary>
-        ''' <param name="xmlFile"></param>
-        Public Sub New(xmlFile As String)
-            Try
-                If My.Computer.FileSystem.FileExists(xmlFile) Then
-                    Dim doc As New Xml.XmlDocument
-                    doc.Load(xmlFile)
-                    Dim re As Xml.XmlNodeReader = New Xml.XmlNodeReader(doc)
-                    Dim tmpStr As String = vbNullString
-                    Dim name As String
-
-                    While re.Read
-                        Select Case re.NodeType
-                            Case Xml.XmlNodeType.Element
-                                name = re.Name
-                            Case Xml.XmlNodeType.Text
-                                If name.Equals("DataSource") Then
-                                    tmpStr = tmpStr & "Data Source=" & re.Value
-                                End If
-                                If name.Equals("InitialCatalog") Then
-                                    tmpStr = tmpStr & ";Initial Catalog=" & re.Value
-                                End If
-                                If name.Equals("UserID") Then
-                                    tmpStr = tmpStr & ";User ID=" & re.Value
-                                End If
-                                If name.Equals("Password") Then
-                                    tmpStr = tmpStr & ";Password=" & re.Value
-                                End If
-                        End Select
-                    End While
-                End If
-            Catch ex As Exception
-                MsgBox(ex.Message & vbCrLf & ex.StackTrace)
-            End Try
+            _nickname = nickName
         End Sub
         ''' <summary>
         ''' 逆序列化构造函数
@@ -255,8 +222,8 @@ Namespace RegOpt
         Inherits RegPath
         Implements ICloneable, ISerializable
 
-        Private _lpvaluetype As Integer
-        Private _regvalue As Object
+        Private ReadOnly _lpvaluetype As Integer
+        Private ReadOnly _regvalue As Object
         ''' <summary>
         ''' 无参数构造函数支持序列化
         ''' </summary>
@@ -318,11 +285,11 @@ Namespace RegOpt
         ''' 构造注册表的键值
         ''' </param>
         Public Sub New(
-                   ByRef hKey As Integer,
-                   ByVal lpSubKey As String,
-                   Optional ByVal lpValueName As String = vbNullString,
-                   Optional ByRef lpValueType As Integer = REG_TYPE.REG_NONE,
-                   Optional ByVal regValue As Object = Nothing)
+                   hKey As Integer,
+                   lpSubKey As String,
+                   Optional lpValueName As String = vbNullString,
+                   Optional lpValueType As Integer = REG_TYPE.REG_NONE,
+                   Optional regValue As Object = Nothing)
 
             MyBase.New(hKey, lpSubKey, lpValueName)
             _lpvaluetype = lpValueType
@@ -398,7 +365,7 @@ Namespace RegOpt
         Inherits RegKey
         Implements ICloneable, ISerializable
 
-        Private _isnull As Boolean
+        Private ReadOnly _isnull As Boolean
 
         ''' <summary>
         ''' 无参数构造函数支持序列化
@@ -413,7 +380,7 @@ Namespace RegOpt
         ''' 复制该对象的所有成员
         ''' </param>
         Public Sub New(
-                   ByRef store As RegStore)
+                   store As RegStore)
 
             MyBase.New(store.Hkey, store.Lpsubkey, store.Lpvaluename, store.Lpvaluetype, store.Regvalue)
             _isnull = store.Isnull
@@ -452,10 +419,10 @@ Namespace RegOpt
         ''' 构造注册表键值
         ''' </param>
         Public Sub New(
-                   ByRef isNull As Boolean,
-                   ByRef reg As RegPath,
-                   ByRef lpValueType As Integer,
-                   ByVal regValue As Object)
+                   isNull As Boolean,
+                   reg As RegPath,
+                   lpValueType As Integer,
+                   regValue As Object)
 
             MyBase.New(reg, lpValueType, regValue)
             _isnull = isNull
@@ -542,6 +509,7 @@ Namespace RegOpt
         End Property
 
     End Class
+    ' ReSharper disable once InconsistentNaming
     ''' <summary>
     ''' 注册表操作类
     ''' </summary>
@@ -549,13 +517,13 @@ Namespace RegOpt
 
         Private Enum OPERATE_OPTION
             REG_OPTION_NON_VOLATILE = &H0
-            REG_CREATED_NEW_KEY = &H1
+            'REG_CREATED_NEW_KEY = &H1
         End Enum
 
         Private Enum KEY_ACCESS_TYPE
             KEY_ALL_ACCESS = &H3F
+            ' ReSharper disable once InconsistentNaming
             KEY_WOW64_64KEY = &H100
-            KEY_WOW64_32KEY = &H200
         End Enum
 
         Private Const REG_OPENED_EXISTING_KEY As Integer = &H2
@@ -629,7 +597,7 @@ Namespace RegOpt
 
             Dim keyexist As Integer
             Dim phkresult As IntPtr
-            Dim strvalue As String = vbNullString
+            Dim strvalue As String
             Dim regsetvaluetemp As Integer
 
             If Environment.Is64BitOperatingSystem = True Then
@@ -690,7 +658,7 @@ Namespace RegOpt
                     NativeMethods.RegCloseKey(phkresult)
                     Return
                 End If
-                regdeletetemp = NativeMethods.RegCloseKey(phkresult)
+                NativeMethods.RegCloseKey(phkresult)
 
             End If
 

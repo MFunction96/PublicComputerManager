@@ -35,7 +35,6 @@ Public Class LoginForm
                 .RegistryB.Enabled = True
                 .Enabled = True
             End With
-            Hide()
             Enabled = False
             Close()
         Else
@@ -46,10 +45,10 @@ Public Class LoginForm
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         MainForm.Enabled = True
-        Hide()
+        Close()
     End Sub
 
-    Private Sub LoginForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Shared Sub LoginForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
 End Class
