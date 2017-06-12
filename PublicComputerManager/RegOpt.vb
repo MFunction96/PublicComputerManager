@@ -19,6 +19,9 @@ Namespace RegOpt
         HKEY_CURRENT_CONFIG = &H80000005
         HKEY_DYN_DATA = &H80000006
     End Enum
+    ''' <summary>
+    ''' 
+    ''' </summary>
     Public Enum REG_TYPE
         REG_NONE = 0
         REG_SZ = 1

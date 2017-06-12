@@ -120,7 +120,7 @@ Namespace PInvoke
         Friend Shared Function RegCreateKeyEx(
                                ByVal hKey As IntPtr,
                                ByVal lpSubKey As String,
-                               ByVal Reserved As Integer,
+                               ByVal lpReserved As Integer,
                                ByVal lpClass As String,
                                ByVal dwOptions As Integer,
                                ByVal samDesired As Integer,

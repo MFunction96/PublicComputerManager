@@ -92,6 +92,22 @@ Public Class MainForm
     End Sub
 
     Private Sub ReExp_Click(sender As Object, e As EventArgs) Handles ReExp.Click
+        Dim ps As Process() = Process.GetProcesses()
+        For Each p As Process In ps
+            If p.ProcessName.ToLower() = "explorer" Then
+                p.Kill()
+                Exit For
+            End If
+        Next
+        Do While True
+            For Each p As Process In ps
+                If p.ProcessName.ToLower() = "explorer" Then
+                    Exit Do
+                End If
+            Next
+            Dim np As New Process
+            np.StartInfo.FileName = "C:\Windows\explorer.exe"
+        Loop
 
     End Sub
 

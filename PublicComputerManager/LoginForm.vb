@@ -24,7 +24,7 @@ Public Class LoginForm
                 '.MmcB.Enabled = True
                 '.MdfPwd.Enabled = True
                 '.CancelDown.Enabled = True
-                '.ReExp.Enabled = True
+                .ReExp.Enabled = True
                 .CtrlPalB.Enabled = True
                 .LauncherB.Enabled = True
                 .CmdB.Enabled = True
